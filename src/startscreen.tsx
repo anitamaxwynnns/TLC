@@ -1,7 +1,7 @@
 import { View, Text, ImageBackground, Button, StyleSheet } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
-export default function startscreen() {
+export default function StartScreen() {
   return (
     <View>
       <ImageBackground source={require('../assets/background.png')} style={styles.image} >
