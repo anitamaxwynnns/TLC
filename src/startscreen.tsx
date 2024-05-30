@@ -1,13 +1,15 @@
-import { View, Text, ImageBackground, Button, StyleSheet, Image } from 'react-native'
+import { View, Text, ImageBackground, StyleSheet, Image } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-
+import { Button } from 'react-native-paper'
 export default function StartScreen() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <ImageBackground source={require('../assets/background.png')} style={styles.image}>
+        <ImageBackground source={require('../assets/background.png')} style={styles.image} blurRadius={2}>
           <Image source={require('../assets/background2.png')} style={styles.image2}></Image>
           <Text style={styles.text}>{"Track.Lift.Connect"}</Text>
+          <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button}>Get Started</Button>
+          <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button}>Sign In</Button>
         </ImageBackground>
       </View>
     </SafeAreaProvider>
@@ -22,18 +24,25 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
     justifyContent: 'center',
     alignItems: 'center',
   },
   image2: {
     justifyContent: 'center',
     resizeMode: 'contain',
-    marginRight: 18,
+    marginRight: 30,
     marginLeft: 1,
   },
   text: {
     fontSize: 50,
+    color: 'black',
+  },
+  button: {
+    marginTop: 30,
+    justifyContent: 'center',
+    marginRight: 15,
+    width: 200,
   }
 })
 
