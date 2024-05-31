@@ -30,7 +30,7 @@ export default function Signin() {
       return
     }
 
-    navigation.replace("Home")
+    navigation.replace("Main")
   }
 
   return (

@@ -35,7 +35,7 @@ export default function Signup() {
       Alert.alert(error.message)
       return
     }
-    navigation.replace("Home")
+    navigation.replace("Main")
   }
 
   return (
