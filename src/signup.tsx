@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
-import { View, Text, ImageBackground, StyleSheet, Alert } from 'react-native'
+import { View, Text, ImageBackground, StyleSheet, Alert, AppState } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Button, TextInput } from 'react-native-paper'
 import { supabase } from './supabase'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackNavigatorParamsList } from '../App'
 
-type RootStackNavigatorParamsList = {
-  SignUp: undefined
-  Home: undefined
-}
+AppState.addEventListener('change', (state) => {
+  if (state == 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
+
 export default function Signup() {
-  const [text, setText] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -26,19 +30,21 @@ export default function Signup() {
       email: email,
       password: password
     })
-
-    if (error) Alert.alert(error.message)
-    if (!session) Alert.alert('Please check your inbox for email verification!')
     setLoading(false)
+    if (error) {
+      Alert.alert(error.message)
+      return
+    }
+    navigation.replace("Home")
   }
 
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
         <ImageBackground source={require('../assets/background.png')} style={styles.image} blurRadius={2}>
-          <TextInput mode='outlined' label='Email Address' value={email} onChangeText={text => setEmail(text)} secureTextEntry={false} placeholder='email@address.com' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput} />
-          <TextInput mode='outlined' label='Password' value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} placeholder='Password' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput2} />
-          <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => { SignUpWithEmail(); navigation.navigate('Home') }}>{'Submit'}</Button>
+          <TextInput mode='outlined' value={email} onChangeText={text => setEmail(text)} secureTextEntry={false} placeholder='Email' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput} />
+          <TextInput mode='outlined' value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} placeholder='Password' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput2} />
+          <Button disabled={loading} mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={SignUpWithEmail}>{'Submit'}</Button>
         </ImageBackground>
       </View>
     </SafeAreaProvider>

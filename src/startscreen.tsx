@@ -3,11 +3,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Button } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackNavigatorParamsList } from '../App'
 
-type RootStackNavigatorParamsList = {
-  StartScreen: undefined
-  SignUp: undefined
-}
 
 export default function StartScreen() {
   const navigation = useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>()
@@ -18,7 +15,7 @@ export default function StartScreen() {
           <Image source={require('../assets/background2.png')} style={styles.image2}></Image>
           <Text style={styles.text}>{"Track.Lift.Connect"}</Text>
           <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => navigation.navigate('SignUp')}>Get Started</Button>
-          <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button}>Sign In</Button>
+          <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => navigation.navigate('SignIn')}>Sign In</Button>
         </ImageBackground>
       </View>
     </SafeAreaProvider>
