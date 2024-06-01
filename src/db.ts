@@ -7,9 +7,8 @@ export async function getExercises() {
 
 
 	if (error) {
-		console.error("Error", error)
+		console.error(error)
 		return []
 	}
-	console.log(data)
 	return data
 }
