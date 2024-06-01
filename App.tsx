@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import StartScreen from './src/startscreen'
 import Signup from './src/signup'
-import Home from './src/home'
 import Signin from "./src/signin"
 import Main from './src/main'
 
