@@ -5,7 +5,9 @@ import Home from './home'
 const Tab = createBottomTabNavigator()
 
 export default function Main() {
-  <Tab.Navigator initialRouteName="Home">
-    <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
-  </Tab.Navigator>
+  return (
+    <Tab.Navigator initialRouteName="Home">
+      <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
+    </Tab.Navigator>
+  )
 }
