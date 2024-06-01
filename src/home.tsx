@@ -1,12 +1,11 @@
-import { supabase } from "./supabase";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getExercises } from "./db";
 import { useState, useEffect } from "react";
 import { FlatList, View, Text } from "react-native"
 
 function ExerciseComponent({ exercise }: { exercise: any }) {
-  return <View>
-    <Text>{exercise.name}</Text>
+  return <View style={{ gap: 4 }}>
+    <Text style={{ fontWeight: "bold" }}>{exercise.name}</Text>
     <Text>{exercise.muscle}</Text>
   </View>
 }
@@ -32,5 +31,3 @@ export default function Home() {
     </SafeAreaView>
   )
 }
-
-
