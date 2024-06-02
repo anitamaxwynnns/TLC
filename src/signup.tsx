@@ -18,18 +18,22 @@ AppState.addEventListener('change', (state) => {
 export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
 
   const navigation = useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>()
   async function SignUpWithEmail() {
     setLoading(true)
     const {
-      data: { session },
+      data: { user },
       error,
     } = await supabase.auth.signUp({
       email: email,
       password: password
     })
+    if (user !== null) {
+      await supabase.from('profile').insert({ user_id: user.id, name: name })
+    }
     setLoading(false)
     if (error) {
       Alert.alert(error.message)
@@ -42,7 +46,8 @@ export default function Signup() {
     <SafeAreaProvider>
       <View style={styles.container}>
         <ImageBackground source={require('../assets/background.png')} style={styles.image} blurRadius={2}>
-          <TextInput mode='outlined' value={email} onChangeText={text => setEmail(text)} secureTextEntry={false} placeholder='Email' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput} />
+          <TextInput mode='outlined' value={name} onChangeText={text => setName(text)} secureTextEntry={false} placeholder='Name' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput} />
+          <TextInput mode='outlined' value={email} onChangeText={text => setEmail(text)} secureTextEntry={false} placeholder='Email' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput2} />
           <TextInput mode='outlined' value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} placeholder='Password' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput2} />
           <Button disabled={loading} mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={SignUpWithEmail}>{'Submit'}</Button>
         </ImageBackground>
