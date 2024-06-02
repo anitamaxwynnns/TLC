@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { useEffect, useState } from "react";
 import { getUserInfo } from "./db_profile";
 import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Profile() {
   /* const [image, setImage] = useState(null)
@@ -18,7 +19,7 @@ export default function Profile() {
 
     console.log(result);
   }; */
-
+  const navigation = useNavigation()
   const [user, setUser] = useState<any>()
   const [loading, setLoading] = useState(true)
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function Profile() {
     <View style={styles.container}>
       <Image source={require('../assets/profile.png')} style={styles.image} />
       <Text style={styles.text}>{user.name}</Text>
-      <Button mode="contained" theme={{ colors: { primary: 'black' } }} style={styles.button}>{"Log Out"}</Button>
+      <Button mode="contained" theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => (navigation as any).navigate("StartScreen")}>{"Log Out"}</Button>
     </View>
   )
 
