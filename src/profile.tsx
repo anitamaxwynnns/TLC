@@ -88,5 +88,5 @@ export default HomeScreen;
 
 
 export default function Profile() {
-  return 5
+
 }
