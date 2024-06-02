@@ -32,7 +32,8 @@ export default function Signup() {
       password: password
     })
     if (user !== null) {
-      await supabase.from('profile').insert({ user_id: user.id, name: name })
+      const result = await supabase.from('profile').insert({ user_id: user.id, name: name })
+      console.log(result)
     }
     setLoading(false)
     if (error) {
