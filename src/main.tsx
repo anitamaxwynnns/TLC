@@ -3,13 +3,20 @@ import { View, Text, StyleSheet } from 'react-native'
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Home from './home'
 import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import Profile from "./profile";
 const Tab = createBottomTabNavigator()
 
 export default function Main() {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator initialRouteName="Profile">
+      <Tab.Screen name="Profile" component={Profile} options={{
+        headerShown: false, tabBarLabel: 'Profile', tabBarLabelStyle: { fontSize: 13 }, tabBarIcon: () => (
+          <AntDesign name="user" size={24} color="black" />
+        )
+      }} />
       <Tab.Screen name="Home" component={Home} options={{
-        headerShown: false, tabBarLabel: 'Exercises', tabBarLabelStyle: { fontSize: 13, color: 'black', }, tabBarInactiveTintColor: 'grey', tabBarActiveTintColor: 'white', tabBarStyle: { backgroundColor: 'dimgrey', shadowOpacity: 2 }, tabBarIcon: () => (
+        headerShown: false, tabBarLabel: 'Exercises', tabBarLabelStyle: { fontSize: 13 }, tabBarIcon: () => (
           <FontAwesome5 name="dumbbell" size={24} color="black" />
         )
       }} />
