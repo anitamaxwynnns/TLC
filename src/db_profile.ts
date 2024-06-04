@@ -7,5 +7,6 @@ export async function getUserInfo(): Promise<{ name: string } | undefined> {
 		console.error(error)
 		return undefined
 	}
+	console.log(data)
 	return data[0]
 }
