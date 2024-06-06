@@ -38,6 +38,56 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
     }
   }
 
+  async function uploadAvatar() {
+    try {
+      setUploading(true)
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+        allowsEditing: true,
+        quality: 1,
+        exif: false,
+      })
+
+      if (result.canceled || !result.assets || result.assets.length === 0) {
+        console.log('User cancelled image picker.')
+        return
+      }
+
+      const image = result.assets[0]
+      console.log('Got image', image)
+
+      if (!image.uri) {
+        throw new Error('No image uri!')
+      }
+
+      const arraybuffer = await fetch(image.uri).then((res) => res.arrayBuffer())
+
+      const fileExt = image.uri?.split('.').pop()?.toLowerCase() ?? 'jpeg'
+      const path = `${Date.now()}.${fileExt}`
+      const { data, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, arraybuffer, {
+          contentType: image.mimeType ?? 'image/jpeg',
+        })
+
+      if (uploadError) {
+        throw uploadError
+      }
+
+      onUpload(data.path)
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message)
+      } else {
+        throw error
+      }
+    } finally {
+      setUploading(false)
+    }
+  }
+
 
 
 
