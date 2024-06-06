@@ -88,6 +88,26 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
     }
   }
 
+  return (
+    <View>
+      {avatarUrl ? (
+        <Image
+          source={{ uri: avatarUrl }}
+          accessibilityLabel="Avatar"
+          style={[avatarSize, styles.avatar, styles.image]}
+        />
+      ) : (
+        <View style={[avatarSize, styles.avatar, styles.noImage]} />
+      )}
+      <View>
+        <Button
+          title={uploading ? 'Uploading ...' : 'Upload'}
+          onPress={uploadAvatar}
+          disabled={uploading}
+        />
+      </View>
+    </View>
+  )
 
 
 
