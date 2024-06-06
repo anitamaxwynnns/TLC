@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { getUserInfo } from "./db_profile";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import Avatar from "./avatar";
 
 export default function Profile() {
   const navigation = useNavigation()
   const [user, setUser] = useState<any>()
   const [loading, setLoading] = useState(true)
+  const [avatarUrl, setAvatarUrl] = useState('')
 
   useEffect(() => {
     let ignore = false
@@ -35,7 +37,9 @@ export default function Profile() {
   }
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/profile.png')} style={styles.image} />
+      <Avatar size={200} url={avatarUrl} onUpload={(url: string) => {
+        setAvatarUrl(url)
+      }} />
       <Text style={styles.text}>{user.name}</Text>
       <Button mode="contained" theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => (navigation as any).navigate("StartScreen")}>{"Log Out"}</Button>
     </View>
