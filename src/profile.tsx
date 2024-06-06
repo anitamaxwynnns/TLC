@@ -8,19 +8,10 @@ import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Profile() {
-  const [image, setImage] = useState(null)
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-  };
   const navigation = useNavigation()
   const [user, setUser] = useState<any>()
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     let ignore = false
     getUserInfo().then(result => {
