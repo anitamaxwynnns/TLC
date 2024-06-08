@@ -10,6 +10,7 @@ import {
     StyleProp,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useAuth } from "./auth_provider";
 
 interface Props {
     size: number;
@@ -22,6 +23,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
     const [uploading, setUploading] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const avatarSize = { height: size, width: size };
+    const {session} = useAuth()
 
     useEffect(() => {
         if (url) downloadImage(url);
