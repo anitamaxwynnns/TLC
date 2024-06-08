@@ -61,7 +61,7 @@ export default function Profile() {
                 mode="contained"
                 theme={{ colors: { primary: "black" } }}
                 style={styles.button}
-                onPress={() => (navigation as any).navigate("StartScreen")}
+                onPress={() => supabase.auth.signOut()}
             >
                 {"Log Out"}
             </Button>
