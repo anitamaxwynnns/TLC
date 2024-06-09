@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import { View, Text, Image, StyleSheet, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
-import { Button } from "react-native-paper";
+import { ActivityIndicator, Button, MD2Colors } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Avatar from "./avatar";
 import { useAuth } from "./auth_provider";
@@ -43,12 +43,12 @@ export default function Profile() {
         return () => {
             ignore = true;
         };
-    }, []);
+    }, []); 
 
     if (loading) {
         return (
-            <View>
-                <Text>{"Loading"}</Text>
+            <View style={styles.container}>
+                <ActivityIndicator animating={true} color={MD2Colors.black} size={'large'} />
             </View>
         );
     }
