@@ -85,7 +85,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
 
             const fileExt =
                 image.uri?.split(".").pop()?.toLowerCase() ?? "jpeg";
-            const path = `${Date.now()}.${fileExt}`;
+            const path = `${session?.user.id}/${Date.now()}.${fileExt}`;
             const { data, error: uploadError } = await supabase.storage
                 .from("avatars")
                 .upload(path, arraybuffer, {
