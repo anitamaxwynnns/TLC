@@ -34,6 +34,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
             const { data, error } = await supabase.storage
                 .from("avatars")
                 .download(path);
+            console.log(path)
 
             if (error) {
                 throw error;
