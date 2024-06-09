@@ -5,24 +5,30 @@ import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Avatar from "./avatar";
 import { useAuth } from "./auth_provider";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackNavigatorParamsList } from "../App";
 
 export default function Profile() {
-    const navigation = useNavigation();
+    const navigation =
+        useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
     const [user, setUser] = useState<any>();
     const [loading, setLoading] = useState(true);
     const [avatarUrl, setAvatarUrl] = useState("");
-    const {session} = useAuth()
+    const { session } = useAuth();
 
- async function getUserInfo(): Promise<{ name: string } | undefined> {
-	const { data, error } = await supabase.from("profile").select("name").eq('user_id', session?.user.id)
+    async function getUserInfo(): Promise<{ name: string } | undefined> {
+        const { data, error } = await supabase
+            .from("profile")
+            .select("name")
+            .eq("user_id", session?.user.id);
 
-	if (error) {
-		console.error(error)
-		return undefined
-	}
-	console.log(data)
-	return data[0]
-} 
+        if (error) {
+            console.error(error);
+            return undefined;
+        }
+        console.log(data);
+        return data[0];
+    }
     useEffect(() => {
         let ignore = false;
         getUserInfo().then((result) => {
@@ -46,6 +52,10 @@ export default function Profile() {
             </View>
         );
     }
+    async function onPress() {
+        await supabase.auth.signOut();
+        navigation.navigate("StartScreen");
+    }
     return (
         <SafeAreaView style={styles.container}>
             <Avatar
@@ -61,7 +71,7 @@ export default function Profile() {
                 mode="contained"
                 theme={{ colors: { primary: "black" } }}
                 style={styles.button}
-                onPress={() => supabase.auth.signOut()}
+                onPress={onPress}
             >
                 {"Log Out"}
             </Button>

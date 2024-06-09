@@ -1,9 +1,15 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { supabase } from "./supabase";
 import { Session } from "@supabase/supabase-js";
 
 const initialState: { session: Session | null } = { session: null };
-export const AuthContext = createContext(initialState);
+const AuthContext = createContext(initialState);
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [session, setSession] = useState<Session | null>(null);
@@ -24,9 +30,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     );
 }
 export function useAuth() {
-    const context = useContext(AuthContext)
+    const context = useContext(AuthContext);
     if (context === undefined) {
-        throw Error ('useAuth must be used within AuthProvider')
+        throw Error("useAuth must be used within AuthProvider");
     }
-    return context
+    return context;
 }
