@@ -2,6 +2,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getExercises } from "./db";
 import { useState, useEffect } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
+import { Searchbar } from "react-native-paper";
 
 function ExerciseComponent({ exercise }: { exercise: any }) {
     return (
@@ -17,22 +18,28 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
 export default function Home() {
     const [exercises, setExercises] = useState<any[]>();
     const [searchQuery, setSearchQuery] = useState("");
+    const [filteredExercises, setFilteredExercises] = useState<any[]>();
 
     useEffect(() => {
         let ignore = false;
         getExercises().then((result) => {
             if (!ignore) {
                 setExercises(result);
+                setFilteredExercises(result)
             }
         });
         return () => {
             ignore = true;
         };
     }, []);
-    
 
     return (
         <SafeAreaView>
+            <Searchbar
+                placeholder="Search"
+                onChangeText={setSearchQuery}
+                value={searchQuery}
+            />
             <FlatList
                 data={exercises}
                 renderItem={({ item }) => <ExerciseComponent exercise={item} />}
