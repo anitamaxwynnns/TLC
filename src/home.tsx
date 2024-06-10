@@ -33,6 +33,11 @@ export default function Home() {
         };
     }, []);
 
+    useEffect(() => {
+    const newData = exercises.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    setFilteredExercises(newData)
+    }, [searchQuery, exercises])
+
     return (
         <SafeAreaView>
             <Searchbar
