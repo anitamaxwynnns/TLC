@@ -25,7 +25,7 @@ export default function Home() {
         getExercises().then((result) => {
             if (!ignore) {
                 setExercises(result);
-                setFilteredExercises(result)
+                setFilteredExercises(result);
             }
         });
         return () => {
@@ -34,9 +34,13 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-    const newData = exercises.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    setFilteredExercises(newData)
-    }, [searchQuery, exercises])
+        if (exercises != undefined) {
+            const newData = exercises.filter((item) =>
+                item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+            );
+            setFilteredExercises(newData);
+        }
+    }, [searchQuery, exercises]);
 
     return (
         <SafeAreaView>
@@ -46,7 +50,7 @@ export default function Home() {
                 value={searchQuery}
             />
             <FlatList
-                data={exercises}
+                data={filteredExercises}
                 renderItem={({ item }) => <ExerciseComponent exercise={item} />}
                 keyExtractor={(item) => item.name}
             />
