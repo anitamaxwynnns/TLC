@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ImageBackground, StyleSheet, Alert, AppState } from 'react-native'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { Button, TextInput } from 'react-native-paper'
-import { supabase } from './supabase'
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackNavigatorParamsList } from '../App'
+
 
 export default function Forum() {
     return(
