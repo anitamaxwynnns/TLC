@@ -1,7 +1,15 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getExercises } from "./db";
-import { useState, useEffect } from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import {
+    FlatList,
+    View,
+    Text,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    Keyboard,
+    SectionList,
+} from "react-native";
 import { Searchbar } from "react-native-paper";
 
 function ExerciseComponent({ exercise }: { exercise: any }) {
@@ -18,7 +26,8 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
 export default function Home() {
     const [exercises, setExercises] = useState<any[]>();
     const [searchQuery, setSearchQuery] = useState("");
-    const [filteredExercises, setFilteredExercises] = useState<any[]>();
+    const [filteredExercises, setFilteredExercises] = useState<any[]>([]);
+
 
     useEffect(() => {
         let ignore = false;
@@ -33,28 +42,41 @@ export default function Home() {
         };
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (exercises != undefined) {
             const newData = exercises.filter((item) =>
                 item.name.toLowerCase().includes(searchQuery.toLowerCase()),
             );
             setFilteredExercises(newData);
         }
-    }, [searchQuery, exercises]);
-
+    }, [searchQuery, exercises]); */
     return (
-        <SafeAreaView>
-            <Searchbar
-                placeholder="Search"
-                onChangeText={setSearchQuery}
-                value={searchQuery}
-            />
-            <FlatList
-                data={filteredExercises}
-                renderItem={({ item }) => <ExerciseComponent exercise={item} />}
-                keyExtractor={(item) => item.name}
-            />
-        </SafeAreaView>
+            <SafeAreaView style={styles.container}>
+                <Text style={styles.header}>Exercises</Text>
+                <Searchbar
+                    placeholder="Search"
+                    onChangeText={setSearchQuery}
+                    value={searchQuery}
+                    mode="bar"
+                    style={{
+                        marginLeft: 15,
+                        marginRight: 15,
+                        backgroundColor: "white",
+                        borderRadius: 10,
+                        alignItems: "center",
+                    }}
+                />
+                <SectionList
+                    sections={filteredExercises}
+                    renderItem={({ item }) => (
+                        <ExerciseComponent exercise={item} />
+                    )}
+                    keyExtractor={(item, index) => item.name + index}
+                renderSectionHeader={({section}) => (
+                <Text style={{fontWeight:'bold'}}>{section.title}</Text>
+                )}
+                />
+            </SafeAreaView>
     );
 }
 
@@ -79,5 +101,13 @@ const styles = StyleSheet.create({
     },
     bodyPart: {
         fontSize: 14,
+    },
+    header: {
+        fontWeight: "700",
+        fontSize: 35,
+        paddingLeft: 15,
+    },
+    container: {
+        gap: 15,
     },
 });
