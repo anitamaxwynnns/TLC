@@ -1,20 +1,63 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getExercises } from "./db";
 import { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Keyboard, SectionList } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    Keyboard,
+    SectionList,
+    TouchableOpacity,
+    Modal,
+} from "react-native";
 import { Searchbar } from "react-native-paper";
 
 function ExerciseComponent({ exercise }: { exercise: any }) {
-    const [modalvisible,setModalvisible ] = useState(false)
+    const [modalvisible, setModalvisible] = useState(false);
     const toggleModal = () => {
-        setModalvisible(!modalvisible)
-    }
+        setModalvisible((modalvisible) => !modalvisible);
+    };
     return (
-        <View style={styles.itemContainer}>
-            <View style={styles.textContainer}>
-                <Text style={styles.exerciseName}>{exercise.name}</Text>
-                <Text style={styles.bodyPart}>{exercise.muscle}</Text>
-            </View>
+        <View>
+            <TouchableOpacity onPress={toggleModal}>
+                <View style={styles.itemContainer}>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.exerciseName}>{exercise.name}</Text>
+                        <Text style={styles.bodyPart}>{exercise.muscle}</Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalvisible}
+                onRequestClose={toggleModal}
+            >
+                <View
+                    style={{
+                        backgroundColor: "rgba()",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 20,
+                        paddingTop: 70,
+                        paddingBottom: 80,
+                        width: "100%",
+                        height: "100%",
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: "white",
+                            borderRadius: 20,
+                            width: "100%",
+                            height: "100%",
+                            padding: 30,
+                        }}
+                    >
+                        <Text>hi</Text>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -112,6 +155,6 @@ const styles = StyleSheet.create({
     },
     container: {
         gap: 15,
-        flex:1,
+        flex: 1,
     },
 });
