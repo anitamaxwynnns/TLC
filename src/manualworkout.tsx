@@ -3,16 +3,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { getManyExercises } from "../src/libs/database/functions";
 import { useNavigation } from '@react-navigation/native';
-import ExerciseSubmissionPage from "./exerciseSubmission";
 
 
 export default function ManualWorkout() {
-    const [exercises, setExercises] = useState([]);
-    const [selectedExercises, setSelectedExercises] = useState([]);
+    const [exercises, setExercises] = useState<any[]>([]);
+    const [selectedExercises, setSelectedExercises] = useState<any[]>([]);
     const navigation = useNavigation();
 
     const HandleExerciseSubmission = () => {
-      navigation.navigate('ExerciseSubmission', {selectedExercises});
+      (navigation as any).navigate('ExerciseSubmission', {selectedExercises});
     };
   
     useEffect(() => {
@@ -58,8 +57,8 @@ export default function ManualWorkout() {
         />
         {selectedExercises.length > 0 && (
         <View style={styles.selectedContainer}>
-          <Text style={styles.selectedHeader}>Selected Exercises</Text>
-          <ScrollView style={styles.scrollView}>
+          <Text style={styles.header}>Selected Exercises</Text>
+          <ScrollView style={styles.selectedContainer}>
             {selectedExercises.map((exercise) => (
               <View key={exercise.name} style={styles.selectedExerciseItem}>
                 <Text style={styles.exerciseText}>{exercise.name}</Text>
