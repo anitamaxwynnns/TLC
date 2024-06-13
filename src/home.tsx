@@ -5,6 +5,10 @@ import { View, Text, StyleSheet, Keyboard, SectionList } from "react-native";
 import { Searchbar } from "react-native-paper";
 
 function ExerciseComponent({ exercise }: { exercise: any }) {
+    const [modalvisible,setModalvisible ] = useState(false)
+    const toggleModal = () => {
+        setModalvisible(!modalvisible)
+    }
     return (
         <View style={styles.itemContainer}>
             <View style={styles.textContainer}>
