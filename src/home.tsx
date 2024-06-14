@@ -9,6 +9,7 @@ import {
     SectionList,
     TouchableOpacity,
     Modal,
+    Pressable,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 
@@ -28,14 +29,14 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                 </View>
             </TouchableOpacity>
             <Modal
-                animationType="slide"
+                animationType="fade"
                 transparent={true}
                 visible={modalvisible}
                 onRequestClose={toggleModal}
             >
-                <View
+                <TouchableOpacity
                     style={{
-                        backgroundColor: "rgba()",
+                        backgroundColor: "rgba(52, 52, 52, 0.8)",
                         justifyContent: "center",
                         alignItems: "center",
                         padding: 20,
@@ -44,6 +45,7 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                         width: "100%",
                         height: "100%",
                     }}
+                    onPress={toggleModal}
                 >
                     <View
                         style={{
@@ -54,9 +56,12 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                             padding: 30,
                         }}
                     >
+                        <Pressable onPress={toggleModal}>
+                            <Text>Back</Text>
+                        </Pressable>
                         <Text>hi</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
             </Modal>
         </View>
     );
