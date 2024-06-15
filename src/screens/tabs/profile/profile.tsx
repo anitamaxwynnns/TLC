@@ -1,12 +1,12 @@
-import { supabase } from "./supabase";
+import { supabase } from "src/libs/database/supabase";
 import { View, Text, Image, StyleSheet, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Button, MD2Colors } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Avatar from "./avatar";
-import { useAuth } from "./auth_provider";
+import { useAuth } from "src/libs/auth/auth_provider";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackNavigatorParamsList } from "../App";
+import { RootStackNavigatorParamsList } from "App";
 
 export default function Profile() {
     const navigation =

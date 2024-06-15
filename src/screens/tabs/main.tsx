@@ -1,13 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Home from "./home";
+import Home from "./exercise/home";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import Profile from "./profile";
-import Forum from "./forum";
-import Workout from "./workout";
-import Settings from "./settings";
+import Profile from "./profile/profile";
+import Forum from "./forum/forum";
+import Workout from "./workout/workout";
 const Tab = createBottomTabNavigator();
 
 export default function Main() {

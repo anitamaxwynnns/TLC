@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { View, Text, ImageBackground, StyleSheet, Alert, AppState } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Button, TextInput } from 'react-native-paper'
-import { supabase } from './supabase'
+import { supabase } from 'src/libs/database/supabase'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackNavigatorParamsList } from '../App'
+import { RootStackNavigatorParamsList } from 'App'
 
 export default function Signin() {
   const [email, setEmail] = useState('')

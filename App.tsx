@@ -1,10 +1,10 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import StartScreen from "./src/startscreen";
-import Signup from "./src/signup";
-import Signin from "./src/signin";
-import Main from "./src/main";
-import AuthProvider from "./src/auth_provider";
+import StartScreen from "src/screens/startscreen";
+import Signup from "src/screens/auth/signup";
+import Signin from "src/screens/auth/signin";
+import Main from "src/screens/tabs/main";
+import AuthProvider from "src/libs/auth/auth_provider";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;

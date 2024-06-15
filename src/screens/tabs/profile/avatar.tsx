@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "./supabase";
+import { supabase } from "src/libs/database/supabase";
 import {
     StyleSheet,
     View,
@@ -10,7 +10,7 @@ import {
     StyleProp,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useAuth } from "./auth_provider";
+import { useAuth } from "src/libs/auth/auth_provider";
 
 interface Props {
     size: number;
