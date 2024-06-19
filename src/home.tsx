@@ -60,7 +60,8 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                         <Pressable onPress={toggleModal}>
                             <Text>Back</Text>
                         </Pressable>
-                        <Image source={{uri:exercise.gifUrl}} style ={{width: "100%", height:"80%"}} />
+                        <Image source={{uri:exercise.gifUrl}} style ={{width: "100%", height:"50%"}} />
+                        <Text style={{width: "100%", height: "80%", fontSize: 18}}>{exercise.instructions}</Text>
                     </View>
                 </TouchableOpacity>
             </Modal>
