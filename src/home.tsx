@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     Modal,
     Pressable,
+    Image
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 
@@ -59,7 +60,7 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                         <Pressable onPress={toggleModal}>
                             <Text>Back</Text>
                         </Pressable>
-                        <Text>hi</Text>
+                        <Image source={{uri:exercise.gifUrl}} style ={{width: "100%", height:"80%"}} />
                     </View>
                 </TouchableOpacity>
             </Modal>
