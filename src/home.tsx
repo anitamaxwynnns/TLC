@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getExercises } from "./db";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
     View,
     Text,
@@ -10,11 +10,20 @@ import {
     TouchableOpacity,
     Modal,
     Pressable,
-    Image
+    Image,
+    ScrollView,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 
-function ExerciseComponent({ exercise }: { exercise: any }) {
+type Exercise = {
+    name: string;
+    muscle: string;
+    first_letter: string;
+    gifUrl: string;
+    instructions: string;
+};
+
+function ExerciseComponent({ exercise }: { exercise: Exercise }) {
     const [modalvisible, setModalvisible] = useState(false);
     const toggleModal = () => {
         setModalvisible((modalvisible) => !modalvisible);
@@ -35,7 +44,7 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                 visible={modalvisible}
                 onRequestClose={toggleModal}
             >
-                <TouchableOpacity
+                <View
                     style={{
                         backgroundColor: "rgba(52, 52, 52, 0.8)",
                         justifyContent: "center",
@@ -46,7 +55,6 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                         width: "100%",
                         height: "100%",
                     }}
-                    onPress={toggleModal}
                 >
                     <View
                         style={{
@@ -55,31 +63,65 @@ function ExerciseComponent({ exercise }: { exercise: any }) {
                             width: "100%",
                             height: "100%",
                             padding: 30,
+                            alignItems: "center",
+                            gap: 30,
                         }}
                     >
-                        <Pressable onPress={toggleModal}>
-                            <Text>Back</Text>
-                        </Pressable>
-                        <Image source={{uri:exercise.gifUrl}} style ={{width: "100%", height:"50%"}} />
-                        <Text style={{width: "100%", height: "80%", fontSize: 18}}>{exercise.instructions}</Text>
+                        <View style={{ width: "100%" }}>
+                            <Pressable onPress={toggleModal}>
+                                <Text>Back</Text>
+                            </Pressable>
+                        </View>
+                        <Image
+                            source={{ uri: exercise.gifUrl }}
+                            style={{
+                                width: "100%",
+                                height: 300,
+                            }}
+                        />
+                        <ScrollView
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    gap: 20,
+                                }}
+                            >
+                                {exercise.instructions
+                                    .split("\n")
+                                    .map((instruction, idx) => (
+                                        <Text
+                                            key={idx}
+                                            style={{
+                                                fontSize: 18,
+                                            }}
+                                        >
+                                            {instruction}
+                                        </Text>
+                                    ))}
+                            </View>
+                        </ScrollView>
                     </View>
-                </TouchableOpacity>
+                </View>
             </Modal>
         </View>
     );
 }
 
 export default function Home() {
-    const [exercises, setExercises] = useState<any[]>([]);
+    const [exercises, setExercises] = useState<Exercise[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [filteredExercises, setFilteredExercises] = useState<any[]>([]);
 
     useEffect(() => {
         let ignore = false;
         getExercises().then((result) => {
             if (!ignore) {
                 setExercises(result);
-                setFilteredExercises(result);
             }
         });
         return () => {
@@ -87,14 +129,27 @@ export default function Home() {
         };
     }, []);
 
-    /*useEffect(() => {
-        if (exercises !== undefined) {
-            const newData = exercises.filter((item) =>
-                item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-            );
-            setFilteredExercises(newData);
+    const filteredSections = useMemo(() => {
+        const filteredExercises = exercises.filter((item) =>
+            item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+        const sectionMap = new Map<string, Exercise[]>();
+        for (const exercise of filteredExercises) {
+            const sectionExercises =
+                sectionMap.get(exercise.first_letter) ?? [];
+            sectionMap.set(exercise.first_letter, [
+                exercise,
+                ...sectionExercises,
+            ]);
         }
-    }, [searchQuery, exercises]); */
+        return Array.from(sectionMap.entries())
+            .map((section) => ({
+                title: section[0],
+                data: section[1].sort((a, b) => a.name.localeCompare(b.name)),
+            }))
+            .sort((a, b) => a.title.localeCompare(b.title));
+    }, [exercises, searchQuery]);
+
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.header}>Exercises</Text>
@@ -112,7 +167,7 @@ export default function Home() {
                 }}
             />
             <SectionList
-                sections={filteredExercises}
+                sections={filteredSections}
                 renderItem={({ item }) => <ExerciseComponent exercise={item} />}
                 keyExtractor={(item, index) => item.name + index}
                 renderSectionHeader={({ section }) => (
