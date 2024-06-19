@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 export async function getExercises() {
     const { data, error } = await supabase
         .from("exercise_table")
-        .select("name,muscle,first_letter");
+        .select("name,muscle,first_letter, gifUrl,instructions");
 
     console.log(data);
 
