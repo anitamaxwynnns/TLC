@@ -13,6 +13,7 @@ export type RootStackNavigatorParamsList = {
     SignIn: undefined;
     Main: undefined;
     Profile: undefined;
+    Forum: undefined;
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
