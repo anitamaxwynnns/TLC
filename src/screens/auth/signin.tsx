@@ -36,7 +36,7 @@ export default function Signin() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <ImageBackground source={require('../assets/background.png')} style={styles.image} blurRadius={2}>
+        <ImageBackground source={require('assets/background.png')} style={styles.image} blurRadius={2}>
           <TextInput mode='outlined' value={email} onChangeText={text => setEmail(text)} secureTextEntry={false} placeholder='Email' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput} />
           <TextInput mode='outlined' value={password} onChangeText={text => setPassword(text)} secureTextEntry={true} placeholder='Password' autoCapitalize='none' activeOutlineColor='black' style={styles.textinput2} />
           <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={signinWithEmail}>{'Submit'}</Button>

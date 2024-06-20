@@ -12,7 +12,7 @@ import {
     Image,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import {  TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { supabase } from "src/libs/database/supabase";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -38,37 +38,48 @@ export default function Forum() {
     }, []);
 
     const fetchPosts = async () => {
-        let {data: Post, error } = await supabase.from('posts').select('id, image_url, caption, likes, profile (name)');
-        if (error) console.log('error', error);
+        let { data: Post, error } = await supabase
+            .from("posts")
+            .select("id, image_url, caption, likes");
+        if (error) console.log("error", error);
         else setPosts(posts);
     };
 
     const likePosts = async (postId: string, currentLikes: number) => {
-        let { error } = await supabase.from('posts').update({ likes: currentLikes + 1 })
-        .eq('id', postId);
-    if (!error) fetchPosts();
-    }
-    
-     return (
-    <View>
-      <Button title="Create Post" onPress={() => navigation.navigate('CreatePost')} />
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View>
-            <Image source={{ uri: item.image_url }} style={{ width: 100, height: 100 }} />
-            <Text>{item.caption}</Text>
-            <Text>Posted by: {item.profile.name}</Text>
-            <Button title="Like" onPress={() => likePosts(item.id, item.likes)} />
-            <Text>{item.likes} Likes</Text>
-          </View>
-        )}
-      />
-    </View>
-  );
+        let { error } = await supabase
+            .from("posts")
+            .update({ likes: currentLikes + 1 })
+            .eq("id", postId);
+        if (!error) fetchPosts();
+    };
 
-
+    return (
+        <View style= {styles.container}>
+            <Button
+                title="Create Post"
+                onPress={() => navigation.navigate("Posts")}
+            />
+            <FlatList
+                data={posts}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <View>
+                        <Image
+                            source={{ uri: item.image_url }}
+                            style={{ width: 100, height: 100 }}
+                        />
+                        <Text>{item.caption}</Text>
+                        <Text>Posted by: {item.profile.name}</Text>
+                        <Button
+                            title="Like"
+                            onPress={() => likePosts(item.id, item.likes)}
+                        />
+                        <Text>{item.likes} Likes</Text>
+                    </View>
+                )}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

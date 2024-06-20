@@ -11,8 +11,8 @@ export default function StartScreen() {
   return (
     <SafeAreaProvider>
       <View style={styles.container}>
-        <ImageBackground source={require('../assets/background.png')} style={styles.image} blurRadius={2}>
-          <Image source={require('../assets/background2.png')} style={styles.image2}></Image>
+        <ImageBackground source={require('assets/background.png')} style={styles.image} blurRadius={2}>
+          <Image source={require('assets/background2.png')} style={styles.image2}></Image>
           <Text style={styles.text}>{"Track.Lift.Connect"}</Text>
           <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => navigation.navigate('SignUp')}>Get Started</Button>
           <Button mode='contained' theme={{ colors: { primary: 'black' } }} style={styles.button} onPress={() => navigation.navigate('SignIn')}>Sign In</Button>

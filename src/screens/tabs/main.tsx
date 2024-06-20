@@ -5,8 +5,8 @@ import Home from "./exercise/home";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import Profile from "./profile/profile";
-import Forum from "./forum/forum";
 import Workout from "./workout/workout";
+import Forum from "./forum/forum";
 const Tab = createBottomTabNavigator();
 
 export default function Main() {
