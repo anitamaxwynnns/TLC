@@ -5,8 +5,6 @@ import Signup from "src/screens/auth/signup";
 import Signin from "src/screens/auth/signin";
 import Main from "src/screens/tabs/main";
 import AuthProvider from "src/libs/auth/auth_provider";
-import Forum from "src/screens/tabs/forum/forum";
-import CreatePostScreen from "src/screens/tabs/forum/createpostscreen";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -56,8 +54,6 @@ export default function App() {
                         component={Main}
                         options={{ headerShown: false }}
                     />
-                    <Stack.Screen name="Forum" component={Forum} />
-                    <Stack.Screen name="Posts" component={CreatePostScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </AuthProvider>
