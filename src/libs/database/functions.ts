@@ -36,3 +36,8 @@ export function getExerciseGifUrl(name: string) {
     const res = supabase.storage.from("exercisegifs").getPublicUrl(fileName);
     return res.data.publicUrl;
 }
+
+export function getProfilePicUrl(userId: string) {
+    const res = supabase.storage.from("avatars").getPublicUrl(userId);
+    return res.data.publicUrl;
+}

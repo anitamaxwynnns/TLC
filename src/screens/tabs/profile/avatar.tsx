@@ -23,7 +23,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
     const [uploading, setUploading] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const avatarSize = { height: size, width: size };
-    const {session} = useAuth()
+    const { session } = useAuth();
 
     useEffect(() => {
         if (url) downloadImage(url);
@@ -83,12 +83,13 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
                 res.arrayBuffer(),
             );
 
-            const fileExt =
-                image.uri?.split(".").pop()?.toLowerCase() ?? "jpeg";
-            const path = `${session?.user.id}/${Date.now()}.${fileExt}`;
+            if (session === null) {
+                throw Error("not logged in");
+            }
+
             const { data, error: uploadError } = await supabase.storage
                 .from("avatars")
-                .upload(path, arraybuffer, {
+                .upload(session?.user.id, arraybuffer, {
                     contentType: image.mimeType ?? "image/jpeg",
                 });
 
