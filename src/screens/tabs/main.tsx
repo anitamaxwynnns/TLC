@@ -6,7 +6,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import Profile from "./profile/profile";
 import Workout from "./workout/workout";
-import Forum from "./forum/forum";
 const Tab = createBottomTabNavigator();
 
 export default function Main() {
@@ -45,18 +44,6 @@ export default function Main() {
                     tabBarLabelStyle: { fontSize: 13 },
                     tabBarIcon: () => (
                         <FontAwesome5 name="running" size={24} color="black" />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Connect"
-                component={Forum}
-                options={{
-                    headerShown: false,
-                    tabBarLabel: "Connect",
-                    tabBarLabelStyle: { fontSize: 13 },
-                    tabBarIcon: () => (
-                        <FontAwesome5 name="comments" size={24} color="black" />
                     ),
                 }}
             />
