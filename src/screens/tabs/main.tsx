@@ -2,10 +2,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Home from "./exercise/home";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import Profile from "./profile/profile";
 import Workout from "./workout/workout";
+import Forum from "./forum/forum";
 const Tab = createBottomTabNavigator();
 
 export default function Main() {
@@ -44,6 +45,18 @@ export default function Main() {
                     tabBarLabelStyle: { fontSize: 13 },
                     tabBarIcon: () => (
                         <FontAwesome5 name="running" size={24} color="black" />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Forum"
+                component={Forum}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: "Forum",
+                    tabBarLabelStyle: { fontSize: 13 },
+                    tabBarIcon: () => (
+                    <Ionicons name="chatbubbles-outline" size={24} color="black" />
                     ),
                 }}
             />
