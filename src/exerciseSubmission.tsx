@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { getExercises } from "./db";
+import { getManyExercises } from "./db";
 import { useNavigation } from '@react-navigation/native';
 
 export default function ExerciseSubmission() {

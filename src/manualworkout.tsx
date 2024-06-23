@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { getExercises } from "./db";
+import { getManyExercises } from "./db";
 import { useNavigation } from '@react-navigation/native';
 import ExerciseSubmissionPage from "./exerciseSubmission";
 
@@ -17,7 +17,7 @@ export default function ManualWorkout() {
   
     useEffect(() => {
       let ignore = false;
-      getExercises().then(result => {
+      getManyExercises().then(result => {
         if (!ignore) {
           setExercises(result);
         }

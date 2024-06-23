@@ -1,11 +1,10 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getExercises } from "./db";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { getExerciseGifUrl, getManyExercises } from "./db";
+import { useState, useEffect, useMemo } from "react";
 import {
     View,
     Text,
     StyleSheet,
-    Keyboard,
     SectionList,
     TouchableOpacity,
     Modal,
@@ -24,6 +23,7 @@ type Exercise = {
 };
 
 function ExerciseComponent({ exercise }: { exercise: Exercise }) {
+    const gifUrl = getExerciseGifUrl(exercise.name);
     const [modalvisible, setModalvisible] = useState(false);
     const toggleModal = () => {
         setModalvisible((modalvisible) => !modalvisible);
@@ -73,7 +73,7 @@ function ExerciseComponent({ exercise }: { exercise: Exercise }) {
                             </Pressable>
                         </View>
                         <Image
-                            source={{ uri: exercise.gifUrl }}
+                            source={{ uri: gifUrl }}
                             style={{
                                 width: "100%",
                                 height: 300,
@@ -119,7 +119,7 @@ export default function Home() {
 
     useEffect(() => {
         let ignore = false;
-        getExercises().then((result) => {
+        getManyExercises().then((result) => {
             if (!ignore) {
                 setExercises(result);
             }
