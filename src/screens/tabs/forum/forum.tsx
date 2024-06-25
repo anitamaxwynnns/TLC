@@ -1,7 +1,14 @@
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
-import { View, Text, SafeAreaView, FlatList, Pressable } from "react-native";
+import {
+    View,
+    Text,
+    SafeAreaView,
+    FlatList,
+    Pressable,
+    Image,
+} from "react-native";
 import { Avatar } from "react-native-paper";
 
 type Post = {
@@ -39,7 +46,7 @@ const data: Post[] = [
 function RenderPost({ post }: { post: Post }) {
     return (
         <View style={{ backgroundColor: "white", borderRadius: 30 }}>
-            <View style={{ padding: 20, gap: 30 }}>
+            <View style={{ padding: 20, gap: 10}}>
                 <View
                     style={{
                         flexDirection: "row",
@@ -55,8 +62,16 @@ function RenderPost({ post }: { post: Post }) {
                         <Text>{post.date.toLocaleString()}</Text>
                     </View>
                 </View>
+                <View style={{ alignItems: "center" }}>
+                    <Image
+                        source={require("../../../../assets/background.png")}
+                        style={{}}
+                    />
+                </View>
                 <View>
-                    <Text>{post.body}</Text>
+                    <Text style={{ fontSize: 30, alignSelf: "auto" }}>
+                        {post.body}
+                    </Text>
                 </View>
                 <View
                     style={{
@@ -87,7 +102,8 @@ function RenderPost({ post }: { post: Post }) {
 }
 
 export default function Forum() {
-    const navigation = useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+    const navigation =
+        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     return (
         <SafeAreaView>
             <View
@@ -97,7 +113,7 @@ export default function Forum() {
                     paddingRight: 20,
                 }}
             >
-                <Pressable onPress={() => navigation.navigate('CreatePost')}>
+                <Pressable onPress={() => navigation.navigate("CreatePost")}>
                     <View>
                         <Entypo name="plus" size={30} color="black" />
                     </View>
