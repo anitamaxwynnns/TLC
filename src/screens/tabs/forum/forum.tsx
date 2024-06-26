@@ -17,6 +17,7 @@ type Post = {
     likes: number;
     comments: number;
     body: string;
+    imageurl: string;
 };
 
 const data: Post[] = [
@@ -26,6 +27,8 @@ const data: Post[] = [
         likes: 0,
         comments: 0,
         body: "noob",
+        imageurl:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMFZxkerYDuRn7B2oD4pmdWtigvi3pTH5pA&s",
     },
     {
         authorid: "22e75c13-d542-4dec-96d2-0b84256153c4",
@@ -33,6 +36,8 @@ const data: Post[] = [
         likes: 0,
         comments: 0,
         body: "noob",
+        imageurl:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMFZxkerYDuRn7B2oD4pmdWtigvi3pTH5pA&s",
     },
     {
         authorid: "22e75c13-d542-4dec-96d2-0b84256153c4",
@@ -40,13 +45,15 @@ const data: Post[] = [
         likes: 0,
         comments: 0,
         body: "noob",
+        imageurl:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMFZxkerYDuRn7B2oD4pmdWtigvi3pTH5pA&s",
     },
 ];
 
 function RenderPost({ post }: { post: Post }) {
     return (
         <View style={{ backgroundColor: "white", borderRadius: 30 }}>
-            <View style={{ padding: 20, gap: 10}}>
+            <View style={{ padding: 20, gap: 10 }}>
                 <View
                     style={{
                         flexDirection: "row",
@@ -62,14 +69,20 @@ function RenderPost({ post }: { post: Post }) {
                         <Text>{post.date.toLocaleString()}</Text>
                     </View>
                 </View>
-                <View style={{ alignItems: "center" }}>
-                    <Image
-                        source={require("../../../../assets/background.png")}
-                        style={{}}
-                    />
-                </View>
                 <View>
-                    <Text style={{ fontSize: 30, alignSelf: "auto" }}>
+                    <View style={{}}>
+                        <Image
+                            source={{ uri: post.imageurl }}
+                            style={{ paddingTop: 500, borderColor: "white" }}
+                        />
+                    </View>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            alignSelf: "auto",
+                            paddingTop: 10,
+                        }}
+                    >
                         {post.body}
                     </Text>
                 </View>
@@ -113,7 +126,7 @@ export default function Forum() {
                     paddingRight: 20,
                 }}
             >
-                <Pressable onPress={() => navigation.navigate("CreatePost")}>
+                <Pressable onPress={() => navigation.navigate("ImageSelector")}>
                     <View>
                         <Entypo name="plus" size={30} color="black" />
                     </View>
