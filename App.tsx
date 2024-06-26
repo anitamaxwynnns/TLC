@@ -8,6 +8,7 @@ import AuthProvider from "src/libs/auth/auth_provider";
 import ProfilePic from "src/screens/auth/profile-pic";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import CreatePost from "src/screens/tabs/forum/createpostscreen";
+import ImageSelector from "src/screens/tabs/forum/ImageSelector";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -19,6 +20,7 @@ export type RootStackNavigatorParamsList = {
     ProfilePic: undefined;
     Forum: undefined;
     CreatePost: undefined;
+    ImageSelector: undefined;
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
@@ -69,7 +71,16 @@ export default function App() {
                             component={Main}
                             options={{ headerShown: false }}
                         />
-                        <Stack.Screen name="CreatePost" component={CreatePost} options={{headerShown: false}} />
+                        <Stack.Screen
+                            name="CreatePost"
+                            component={CreatePost}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="ImageSelector"
+                            component={ImageSelector}
+                            options={{ headerShown: false }}
+                        />
                     </Stack.Navigator>
                 </NavigationContainer>
             </AuthProvider>
