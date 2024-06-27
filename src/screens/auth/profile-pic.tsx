@@ -5,7 +5,6 @@ import {
     View,
     StyleSheet,
 } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import Avatar from "../tabs/profile/avatar";
 import { useState } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -35,8 +34,10 @@ export default function ProfilePic() {
                     onPress={() => navigation.navigate("Main")}
                     mode="contained"
                     theme={{ colors: { primary: "black" } }}
-                    style={{marginTop: 50}}
-                >{"Next"}</Button>
+                    style={{ marginTop: 50 }}
+                >
+                    {"Next"}
+                </Button>
             </ImageBackground>
         </View>
     );
