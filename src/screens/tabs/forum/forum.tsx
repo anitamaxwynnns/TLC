@@ -16,7 +16,7 @@ import { supabase } from "src/libs/database/supabase";
 type Post = {
     id: number;
     author_id: string;
-    created_at: Date;
+    created_at: string;
     likes: number;
     comments: number;
     body: string;
@@ -69,7 +69,9 @@ function RenderPost({ post }: { post: Post }) {
                     />
                     <View style={{ gap: 10 }}>
                         <Text>{authorName}</Text>
-                        <Text>{post.created_at.toLocaleString()}</Text>
+                        <Text>
+                            {new Date(post.created_at).toLocaleString()}
+                        </Text>
                     </View>
                 </View>
                 <View>
@@ -124,9 +126,9 @@ export default function Forum() {
             .from("posts")
             .select("*")
             .then((result) => {
-                if (result !== undefined) {
-                    if (!ignore) {
-                        setData(result as any);
+                if (!ignore) {
+                    if (result !== undefined && result.data !== null) {
+                        setData(result.data);
                     }
                 }
             });
