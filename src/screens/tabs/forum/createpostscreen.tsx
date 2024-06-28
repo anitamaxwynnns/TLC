@@ -1,16 +1,22 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
 import { useState } from "react";
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, Alert } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import { useAuth } from "src/libs/auth/auth_provider";
+import { supabase } from "src/libs/database/supabase";
+
 export default function CreatePost() {
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     const [text, setText] = useState("");
+    const { session } = useAuth();
 
-    function HandlePost() {
-
-        navigation.navigate('Forum');
+    async function HandlePost() {
+        await supabase
+            .from("posts")
+            .insert({ author_id: session?.user.id, body: text });
+        navigation.navigate("Forum");
     }
 
     return (

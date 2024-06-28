@@ -70,12 +70,11 @@ function RenderPost({ post }: { post: Post }) {
                     </View>
                 </View>
                 <View>
-                    <View style={{}}>
-                        <Image
-                            source={{ uri: post.imageurl }}
-                            style={{ paddingTop: 500, borderColor: "white" }}
-                        />
-                    </View>
+                    <Image
+                        source={{ uri: post.imageurl }}
+                        style={{ height: 400, width: 400, alignSelf: "center" }}
+                        resizeMode="contain"
+                    />
                     <Text
                         style={{
                             fontSize: 20,
