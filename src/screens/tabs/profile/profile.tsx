@@ -15,7 +15,6 @@ export default function Profile() {
         useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
     const [user, setUser] = useState<any>();
     const [loading, setLoading] = useState(true);
-    const [avatarUrl, setAvatarUrl] = useState("");
     const { session } = useAuth();
 
     async function getUserInfo(): Promise<{ name: string } | undefined> {

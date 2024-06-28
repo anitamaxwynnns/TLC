@@ -25,31 +25,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
     const avatarSize = { height: size, width: size };
     const { session } = useAuth();
 
-    useEffect(() => {
-        if (url) downloadImage(url);
-    }, [url]);
 
-    async function downloadImage(path: string) {
-        try {
-            const { data, error } = await supabase.storage
-                .from("avatars")
-                .download(path);
-
-            if (error) {
-                throw error;
-            }
-
-            const fr = new FileReader();
-            fr.readAsDataURL(data);
-            fr.onload = () => {
-                setAvatarUrl(fr.result as string);
-            };
-        } catch (error) {
-            if (error instanceof Error) {
-                console.log("Error downloading image: ", error.message);
-            }
-        }
-    }
 
     async function uploadAvatar() {
         try {
@@ -92,7 +68,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
                 .upload(session?.user.id, arraybuffer, {
                     contentType: image.mimeType ?? "image/jpeg",
                 });
-
+                setAvatarUrl(image.uri)
             if (uploadError) {
                 throw uploadError;
             }
