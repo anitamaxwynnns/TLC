@@ -11,6 +11,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "src/libs/auth/auth_provider";
 import { useEffect, useState } from "react";
+import { randomUUID } from "expo-crypto";
 
 interface Props {
     size: number;
@@ -19,37 +20,16 @@ interface Props {
     style?: StyleProp<ViewStyle>;
 }
 
-export default function ImageSelectorProp({ url, size = 500, onUpload, style }: Props) {
+export default function ImageSelectorProp({
+    url,
+    size = 500,
+    onUpload,
+    style,
+}: Props) {
     const [uploading, setUploading] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const avatarSize = { height: size, width: size };
     const { session } = useAuth();
-
-    useEffect(() => {
-        if (url) downloadImage(url);
-    }, [url]);
-
-    async function downloadImage(path: string) {
-        try {
-            const { data, error } = await supabase.storage
-                .from("post-images")
-                .download(path);
-
-            if (error) {
-                throw error;
-            }
-
-            const fr = new FileReader();
-            fr.readAsDataURL(data);
-            fr.onload = () => {
-                setAvatarUrl(fr.result as string);
-            };
-        } catch (error) {
-            if (error instanceof Error) {
-                console.log("Error downloading image: ", error.message);
-            }
-        }
-    }
 
     async function uploadAvatar() {
         try {
@@ -87,9 +67,11 @@ export default function ImageSelectorProp({ url, size = 500, onUpload, style }: 
                 throw Error("not logged in");
             }
 
+            const path = `${session?.user.id}/${randomUUID()}`;
+
             const { data, error: uploadError } = await supabase.storage
                 .from("post-images")
-                .upload(session?.user.id, arraybuffer, {
+                .upload(path, arraybuffer, {
                     contentType: image.mimeType ?? "image/jpeg",
                 });
 
@@ -98,6 +80,7 @@ export default function ImageSelectorProp({ url, size = 500, onUpload, style }: 
             }
 
             onUpload(data.path);
+            setAvatarUrl(image.uri);
         } catch (error) {
             if (error instanceof Error) {
                 Alert.alert(error.message);

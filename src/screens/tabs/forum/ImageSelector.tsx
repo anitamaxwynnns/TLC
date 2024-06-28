@@ -4,6 +4,8 @@ import { useState } from "react";
 import { SafeAreaView, Text, View } from "react-native";
 import { Appbar, Button } from "react-native-paper";
 import ImageSelectorProp from "./ImageSelectorProp";
+import { getProfilePicUrl } from "src/libs/database/functions";
+import { supabase } from "src/libs/database/supabase";
 
 export default function ImageSelector() {
     const navigation =
@@ -22,7 +24,13 @@ export default function ImageSelector() {
                 }}
             />
             <Button
-                onPress={() => navigation.navigate("CreatePost")}
+                onPress={() =>
+                    navigation.navigate("CreatePost", {
+                        imageUrl: supabase.storage
+                            .from("post-images")
+                            .getPublicUrl(avatarUrl).data.publicUrl,
+                    })
+                }
                 style={{
                     width: 80,
                     alignSelf: "center",

@@ -1,6 +1,7 @@
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
+import { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -10,47 +11,49 @@ import {
     Image,
 } from "react-native";
 import { Avatar } from "react-native-paper";
+import { supabase } from "src/libs/database/supabase";
 
 type Post = {
-    authorid: string;
-    date: Date;
+    id: number;
+    author_id: string;
+    created_at: Date;
     likes: number;
     comments: number;
     body: string;
-    imageurl: string;
+    image_url: string;
 };
 
-const data: Post[] = [
-    {
-        authorid: "22e75c13-d542-4dec-96d2-0b84256153c4",
-        date: new Date(),
-        likes: 0,
-        comments: 0,
-        body: "noob",
-        imageurl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMFZxkerYDuRn7B2oD4pmdWtigvi3pTH5pA&s",
-    },
-    {
-        authorid: "22e75c13-d542-4dec-96d2-0b84256153c4",
-        date: new Date(),
-        likes: 0,
-        comments: 0,
-        body: "noob",
-        imageurl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMFZxkerYDuRn7B2oD4pmdWtigvi3pTH5pA&s",
-    },
-    {
-        authorid: "22e75c13-d542-4dec-96d2-0b84256153c4",
-        date: new Date(),
-        likes: 0,
-        comments: 0,
-        body: "noob",
-        imageurl:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMFZxkerYDuRn7B2oD4pmdWtigvi3pTH5pA&s",
-    },
-];
-
 function RenderPost({ post }: { post: Post }) {
+    const [authorName, setAuthorName] = useState("");
+    const [commentCount, setCommentCount] = useState(0);
+    useEffect(() => {
+        let ignore = false;
+        supabase
+            .from("profile")
+            .select("name")
+            .eq("user_id", post.author_id)
+            .then((result) => {
+                if (!ignore) {
+                    if (result !== undefined && result.data !== null) {
+                        setAuthorName(result.data[0].name);
+                    }
+                }
+            });
+        supabase
+            .from("comments")
+            .select("*", { head: true, count: "exact" })
+            .eq("post_id", post.id)
+            .then((result) => {
+                if (!ignore) {
+                    if (result !== undefined && result.count !== null) {
+                        setCommentCount(result.count);
+                    }
+                }
+            });
+        return () => {
+            ignore = false;
+        };
+    }, []);
     return (
         <View style={{ backgroundColor: "white", borderRadius: 30 }}>
             <View style={{ padding: 20, gap: 10 }}>
@@ -65,13 +68,13 @@ function RenderPost({ post }: { post: Post }) {
                         source={require("../../../../assets/background.png")}
                     />
                     <View style={{ gap: 10 }}>
-                        <Text>john doe</Text>
-                        <Text>{post.date.toLocaleString()}</Text>
+                        <Text>{authorName}</Text>
+                        <Text>{post.created_at.toLocaleString()}</Text>
                     </View>
                 </View>
                 <View>
                     <Image
-                        source={{ uri: post.imageurl }}
+                        source={{ uri: post.image_url }}
                         style={{ height: 400, width: 400, alignSelf: "center" }}
                         resizeMode="contain"
                     />
@@ -105,7 +108,7 @@ function RenderPost({ post }: { post: Post }) {
                         </View>
                     </Pressable>
                     <View>
-                        <Text>{post.comments} comment</Text>
+                        <Text>{commentCount} comment</Text>
                     </View>
                 </View>
             </View>
@@ -114,6 +117,23 @@ function RenderPost({ post }: { post: Post }) {
 }
 
 export default function Forum() {
+    const [data, setData] = useState<Post[]>([]);
+    useEffect(() => {
+        let ignore = false;
+        supabase
+            .from("posts")
+            .select("*")
+            .then((result) => {
+                if (result !== undefined) {
+                    if (!ignore) {
+                        setData(result as any);
+                    }
+                }
+            });
+        return () => {
+            ignore = false;
+        };
+    }, []);
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     return (
