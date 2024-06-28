@@ -3,10 +3,12 @@ import { NavigationProp, useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigatorParamsList } from './workout';
 
+
 export default function ExerciseSubmission() {
   const route = useRoute();
   const { selectedExercises } = route.params;
   const navigation = useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+
 
   const GoHome = () => {
     Alert.alert(
@@ -25,8 +27,11 @@ export default function ExerciseSubmission() {
     <View style={styles.exerciseItem}>
       <Text style={styles.exerciseText}>{index + 1}. {item.name}</Text>
       <Text style={styles.bodyPart}>{item.muscle}</Text>
+      <Text style={styles.repsSets}>Reps: {item.reps}</Text>
+      <Text style={styles.repsSets}>Sets: {item.sets}</Text>
     </View>
   );
+
 
   return (
     <View style={styles.container}>
@@ -42,6 +47,7 @@ export default function ExerciseSubmission() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -83,4 +89,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
+  repsSets: {
+    fontSize: 16,
+    color: '#333',
+  },
 });
+

@@ -9,6 +9,7 @@ import ProfilePic from "src/screens/auth/profile-pic";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import CreatePost from "src/screens/tabs/forum/createpostscreen";
 import ImageSelector from "src/screens/tabs/forum/ImageSelector";
+import ExerciseSubmission from "src/screens/tabs/workout/exerciseSubmission";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -21,6 +22,7 @@ export type RootStackNavigatorParamsList = {
     Forum: any;
     CreatePost: { imageUrl: string };
     ImageSelector: undefined;
+    ExerciseSubmission: {selectedExercises: any[]};
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
@@ -81,6 +83,12 @@ export default function App() {
                             component={ImageSelector}
                             options={{ headerShown: false }}
                         />
+                        <Stack.Screen
+                            name="ExerciseSubmission"
+                            component={ExerciseSubmission}
+                            options={{ headerShown: false }}
+                        />
+                        
                     </Stack.Navigator>
                 </NavigationContainer>
             </AuthProvider>
