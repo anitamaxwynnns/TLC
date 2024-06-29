@@ -19,7 +19,6 @@ type Post = {
     id: number;
     author_id: string;
     created_at: string;
-    likes: number;
     comments: number;
     body: string;
     image_url: string;
@@ -29,6 +28,36 @@ function RenderPost({ post }: { post: Post }) {
     const [authorName, setAuthorName] = useState("");
     const [commentCount, setCommentCount] = useState(0);
     const { session } = useAuth();
+    const [liked, setLiked] = useState(false);
+    const [likes, setLikes] = useState(0);
+
+    useEffect(() => {
+        let ignore = false;
+        supabase
+            .from("likes")
+            .select("*", { head: true, count: "exact" })
+            .eq("post_id", post.id)
+            .eq("user_id", session?.user.id)
+            .then((result) => {
+                if (!ignore) {
+                    if (result !== undefined && result.count !== null) {
+                        setLiked(result.count > 0);
+                        setLikes(result.count);
+                    }
+                }
+            });
+        return () => {
+            ignore = false;
+        };
+    }, []);
+
+    function HandleLike() {
+        if (liked === false) {
+            supabase
+                .from("likes")
+                .insert({ post_id: post.id, user_id: session?.user.id });
+        }
+    }
     useEffect(() => {
         let ignore = false;
         supabase
@@ -102,7 +131,7 @@ function RenderPost({ post }: { post: Post }) {
                         alignItems: "center",
                     }}
                 >
-                    <Pressable>
+                    <Pressable onPress={HandleLike}>
                         <View
                             style={{
                                 flexDirection: "row",
@@ -111,7 +140,7 @@ function RenderPost({ post }: { post: Post }) {
                             }}
                         >
                             <AntDesign name="like2" size={20} color="black" />
-                            <Text>{post.likes}</Text>
+                            <Text>{likes}</Text>
                         </View>
                     </Pressable>
                     <View>
