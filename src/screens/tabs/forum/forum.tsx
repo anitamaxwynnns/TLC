@@ -69,7 +69,7 @@ function RenderPost({ post }: { post: Post }) {
                 >
                     <Avatar.Image
                         source={{
-                            uri: getProfilePicUrl(session?.user.id ?? ""),
+                            uri: getProfilePicUrl(post.author_id ?? ""),
                         }}
                     />
                     <View style={{ gap: 10 }}>
@@ -144,9 +144,8 @@ export default function Forum() {
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     return (
-        <SafeAreaView style={{flex:1
-        }}>
-            <View 
+        <SafeAreaView style={{ flex: 1 }}>
+            <View
                 style={{
                     alignItems: "flex-end",
                     padding: 10,
