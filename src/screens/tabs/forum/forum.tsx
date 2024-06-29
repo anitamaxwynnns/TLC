@@ -11,6 +11,8 @@ import {
     Image,
 } from "react-native";
 import { Avatar } from "react-native-paper";
+import { useAuth } from "src/libs/auth/auth_provider";
+import { getProfilePicUrl } from "src/libs/database/functions";
 import { supabase } from "src/libs/database/supabase";
 
 type Post = {
@@ -26,6 +28,7 @@ type Post = {
 function RenderPost({ post }: { post: Post }) {
     const [authorName, setAuthorName] = useState("");
     const [commentCount, setCommentCount] = useState(0);
+    const { session } = useAuth();
     useEffect(() => {
         let ignore = false;
         supabase
@@ -65,7 +68,9 @@ function RenderPost({ post }: { post: Post }) {
                     }}
                 >
                     <Avatar.Image
-                        source={require("../../../../assets/background.png")}
+                        source={{
+                            uri: getProfilePicUrl(session?.user.id ?? ""),
+                        }}
                     />
                     <View style={{ gap: 10 }}>
                         <Text>{authorName}</Text>
