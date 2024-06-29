@@ -1,4 +1,4 @@
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
 import { useEffect, useState } from "react";
@@ -9,8 +9,9 @@ import {
     FlatList,
     Pressable,
     Image,
+    Modal,
 } from "react-native";
-import { Avatar } from "react-native-paper";
+import { Avatar, TextInput } from "react-native-paper";
 import { useAuth } from "src/libs/auth/auth_provider";
 import { getProfilePicUrl } from "src/libs/database/functions";
 import { supabase } from "src/libs/database/supabase";
@@ -24,7 +25,21 @@ type Post = {
     image_url: string;
 };
 
-function RenderPost({ post }: { post: Post }) {
+type Comment = {
+    id: number;
+    post_id: number;
+    created_at: string;
+    author_id: string;
+    body: string;
+};
+
+function RenderPost({
+    post,
+    openCommentModal,
+}: {
+    post: Post;
+    openCommentModal: (postId: number) => void;
+}) {
     const [authorName, setAuthorName] = useState("");
     const [commentCount, setCommentCount] = useState(0);
     const { session } = useAuth();
@@ -167,10 +182,143 @@ function RenderPost({ post }: { post: Post }) {
                             <Text>{likes}</Text>
                         </View>
                     </Pressable>
-                    <View>
-                        <Text>{commentCount} comment</Text>
-                    </View>
+                    <Pressable onPress={() => openCommentModal(post.id)}>
+                        <View>
+                            <Text>{commentCount} comment</Text>
+                        </View>
+                    </Pressable>
                 </View>
+            </View>
+        </View>
+    );
+}
+
+function CommentModal({
+    postId,
+    visible,
+    closeCommentModal,
+}: {
+    postId: number | null;
+    visible: boolean;
+    closeCommentModal: () => void;
+}) {
+    const [text, setText] = useState("");
+    const [comments, setComments] = useState<Comment[]>([]);
+    const { session } = useAuth();
+
+    useEffect(() => {
+        let ignore = false;
+        supabase
+            .from("comments")
+            .select("*")
+            .eq("post_id", postId)
+            .then((result) => {
+                if (!ignore) {
+                    setComments(result.data ?? []);
+                }
+            });
+    }, [postId]);
+
+    async function handleComment() {
+        await supabase.from("comments").insert({
+            author_id: session?.user.id,
+            body: text,
+            post_id: postId,
+        });
+        supabase
+            .from("comments")
+            .select("*")
+            .eq("post_id", postId)
+            .then((result) => {
+                setComments(result.data ?? []);
+            });
+        setText("");
+    }
+
+    return (
+        <Modal visible={visible} animationType="slide">
+            <SafeAreaView>
+                <Pressable
+                    onPress={closeCommentModal}
+                    style={{
+                        alignSelf: "flex-end",
+                        paddingRight: 20,
+                        paddingBottom: 10,
+                    }}
+                >
+                    <AntDesign name="close" size={24} color="black" />
+                </Pressable>
+                <View
+                    style={{
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 20,
+                    }}
+                >
+                    <TextInput
+                        mode="outlined"
+                        label="Add a comment..."
+                        value={text}
+                        onChangeText={(text) => setText(text)}
+                        style={{ flex: 1 }}
+                        activeOutlineColor="black"
+                        outlineColor="black"
+                    />
+                    <Pressable onPress={handleComment}>
+                        <View>
+                            <Ionicons
+                                name="send-sharp"
+                                size={30}
+                                color="black"
+                            />
+                        </View>
+                    </Pressable>
+                </View>
+                {postId !== null && (
+                    <FlatList
+                        data={comments}
+                        renderItem={({ item }) => <RenderComment item={item} />}
+                    />
+                )}
+            </SafeAreaView>
+        </Modal>
+    );
+}
+
+function RenderComment({ item }: { item: Comment }) {
+    const [authorName, setAuthorName] = useState("");
+
+    useEffect(() => {
+        let ignore = false;
+        supabase
+            .from("profile")
+            .select("name")
+            .eq("user_id", item.author_id)
+            .then((result) => {
+                if (!ignore) {
+                    if (result !== undefined && result.data !== null) {
+                        setAuthorName(result.data[0].name);
+                    }
+                }
+            });
+        return () => {
+            ignore = false;
+        };
+    }, []);
+
+    return (
+        <View style={{ flexDirection: "row", gap: 20, padding: 20 }}>
+            <Avatar.Image
+                source={{ uri: getProfilePicUrl(item.author_id ?? "") }}
+            />
+            <View style={{ gap: 10 }}>
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                    <Text style={{fontWeight:500}}>{authorName}</Text>
+                    <Text>{new Date(item.created_at).toLocaleString()}</Text>
+                </View>
+                <Text>{item.body}</Text>
             </View>
         </View>
     );
@@ -178,6 +326,22 @@ function RenderPost({ post }: { post: Post }) {
 
 export default function Forum() {
     const [data, setData] = useState<Post[]>([]);
+    const [visible, setVisible] = useState(false);
+    const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+
+    const navigation =
+        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+
+    function openCommentModal(postId: number) {
+        setVisible(true);
+        setSelectedPostId(postId);
+    }
+
+    function closeCommentModal() {
+        setVisible(false);
+        setSelectedPostId(null);
+    }
+
     useEffect(() => {
         let ignore = false;
         supabase
@@ -194,8 +358,7 @@ export default function Forum() {
             ignore = false;
         };
     }, []);
-    const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View
@@ -203,8 +366,13 @@ export default function Forum() {
                     alignItems: "flex-end",
                     padding: 10,
                     paddingRight: 20,
+                    paddingLeft: 20,
+                    justifyContent: "space-between",
+                    alignContent: "center",
+                    flexDirection: "row",
                 }}
             >
+                <Text style={{ fontSize: 35, fontWeight: "700" }}>Forum</Text>
                 <Pressable onPress={() => navigation.navigate("ImageSelector")}>
                     <View>
                         <Entypo name="plus" size={30} color="black" />
@@ -213,8 +381,18 @@ export default function Forum() {
             </View>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <RenderPost post={item} />}
+                renderItem={({ item }) => (
+                    <RenderPost
+                        openCommentModal={openCommentModal}
+                        post={item}
+                    />
+                )}
                 contentContainerStyle={{ gap: 10 }}
+            />
+            <CommentModal
+                postId={selectedPostId}
+                visible={visible}
+                closeCommentModal={closeCommentModal}
             />
         </SafeAreaView>
     );
