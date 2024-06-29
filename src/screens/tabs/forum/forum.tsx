@@ -31,6 +31,31 @@ function RenderPost({ post }: { post: Post }) {
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(0);
 
+    async function HandleLike() {
+        if (!liked) {
+            await supabase
+                .from("likes")
+                .insert({ post_id: post.id, user_id: session?.user.id });
+        } else {
+            await supabase
+                .from("likes")
+                .delete()
+                .eq("post_id", post.id)
+                .eq("user_id", session?.user.id);
+        }
+        supabase
+            .from("likes")
+            .select("*", { head: true, count: "exact" })
+            .eq("post_id", post.id)
+            .eq("user_id", session?.user.id)
+            .then((result) => {
+                if (result !== undefined && result.count !== null) {
+                    setLiked(result.count > 0);
+                    setLikes(result.count);
+                }
+            });
+    }
+
     useEffect(() => {
         let ignore = false;
         supabase
@@ -46,20 +71,6 @@ function RenderPost({ post }: { post: Post }) {
                     }
                 }
             });
-        return () => {
-            ignore = false;
-        };
-    }, []);
-
-    function HandleLike() {
-        if (liked === false) {
-            supabase
-                .from("likes")
-                .insert({ post_id: post.id, user_id: session?.user.id });
-        }
-    }
-    useEffect(() => {
-        let ignore = false;
         supabase
             .from("profile")
             .select("name")
@@ -86,6 +97,7 @@ function RenderPost({ post }: { post: Post }) {
             ignore = false;
         };
     }, []);
+
     return (
         <View style={{ backgroundColor: "white", borderRadius: 30 }}>
             <View style={{ padding: 20, gap: 10 }}>
@@ -139,7 +151,19 @@ function RenderPost({ post }: { post: Post }) {
                                 gap: 5,
                             }}
                         >
-                            <AntDesign name="like2" size={20} color="black" />
+                            {liked ? (
+                                <AntDesign
+                                    name="like1"
+                                    size={20}
+                                    color="black"
+                                />
+                            ) : (
+                                <AntDesign
+                                    name="like2"
+                                    size={20}
+                                    color="black"
+                                />
+                            )}
                             <Text>{likes}</Text>
                         </View>
                     </Pressable>
