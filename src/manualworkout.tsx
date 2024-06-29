@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { getManyExercises } from "./db";
+import { getManyExercises } from "../src/libs/database/functions";
 import { useNavigation } from '@react-navigation/native';
 import ExerciseSubmissionPage from "./exerciseSubmission";
 

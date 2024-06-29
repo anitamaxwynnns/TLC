@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { supabase } from "./supabase";
+import { supabase } from "src/libs/database/supabase";
 import {
     StyleSheet,
     View,
@@ -10,7 +9,9 @@ import {
     StyleProp,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useAuth } from "./auth_provider";
+import { useAuth } from "src/libs/auth/auth_provider";
+import { useEffect, useState } from "react";
+import { randomUUID } from "expo-crypto";
 
 interface Props {
     size: number;
@@ -19,37 +20,16 @@ interface Props {
     style?: StyleProp<ViewStyle>;
 }
 
-export default function Avatar({ url, size = 150, onUpload, style }: Props) {
+export default function ImageSelectorProp({
+    url,
+    size = 500,
+    onUpload,
+    style,
+}: Props) {
     const [uploading, setUploading] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const avatarSize = { height: size, width: size };
-    const {session} = useAuth()
-
-    useEffect(() => {
-        if (url) downloadImage(url);
-    }, [url]);
-
-    async function downloadImage(path: string) {
-        try {
-            const { data, error } = await supabase.storage
-                .from("avatars")
-                .download(path);
-
-            if (error) {
-                throw error;
-            }
-
-            const fr = new FileReader();
-            fr.readAsDataURL(data);
-            fr.onload = () => {
-                setAvatarUrl(fr.result as string);
-            };
-        } catch (error) {
-            if (error instanceof Error) {
-                console.log("Error downloading image: ", error.message);
-            }
-        }
-    }
+    const { session } = useAuth();
 
     async function uploadAvatar() {
         try {
@@ -83,11 +63,14 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
                 res.arrayBuffer(),
             );
 
-            const fileExt =
-                image.uri?.split(".").pop()?.toLowerCase() ?? "jpeg";
-            const path = `${session?.user.id}/${Date.now()}.${fileExt}`;
+            if (session === null) {
+                throw Error("not logged in");
+            }
+
+            const path = `${session?.user.id}/${randomUUID()}`;
+
             const { data, error: uploadError } = await supabase.storage
-                .from("avatars")
+                .from("post-images")
                 .upload(path, arraybuffer, {
                     contentType: image.mimeType ?? "image/jpeg",
                 });
@@ -97,6 +80,7 @@ export default function Avatar({ url, size = 150, onUpload, style }: Props) {
             }
 
             onUpload(data.path);
+            setAvatarUrl(image.uri);
         } catch (error) {
             if (error instanceof Error) {
                 Alert.alert(error.message);

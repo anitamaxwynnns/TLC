@@ -1,19 +1,20 @@
-import { supabase } from "./supabase";
+import { supabase } from "src/libs/database/supabase";
 import { View, Text, Image, StyleSheet, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Button, MD2Colors } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import Avatar from "./avatar";
-import { useAuth } from "./auth_provider";
+import { useAuth } from "src/libs/auth/auth_provider";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackNavigatorParamsList } from "../App";
+import { RootStackNavigatorParamsList } from "App";
+import { getProfilePicUrl } from "src/libs/database/functions";
+import { Avatar as PaperAvatar } from "react-native-paper";
 
 export default function Profile() {
     const navigation =
         useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
     const [user, setUser] = useState<any>();
     const [loading, setLoading] = useState(true);
-    const [avatarUrl, setAvatarUrl] = useState("");
     const { session } = useAuth();
 
     async function getUserInfo(): Promise<{ name: string } | undefined> {
@@ -43,12 +44,16 @@ export default function Profile() {
         return () => {
             ignore = true;
         };
-    }, []); 
+    }, []);
 
     if (loading) {
         return (
             <View style={styles.container}>
-                <ActivityIndicator animating={true} color={MD2Colors.black} size={'large'} />
+                <ActivityIndicator
+                    animating={true}
+                    color={MD2Colors.black}
+                    size={"large"}
+                />
             </View>
         );
     }
@@ -56,16 +61,10 @@ export default function Profile() {
         await supabase.auth.signOut();
         navigation.navigate("StartScreen");
     }
+
     return (
         <SafeAreaView style={styles.container}>
-            <Avatar
-                size={200}
-                url={avatarUrl}
-                onUpload={(url: string) => {
-                    setAvatarUrl(url);
-                }}
-                style={styles.image}
-            />
+            <PaperAvatar.Image source={{uri: getProfilePicUrl(session?.user.id ?? "") }} size={200} />
             <Text style={styles.text}>{user.name}</Text>
             <Button
                 mode="contained"

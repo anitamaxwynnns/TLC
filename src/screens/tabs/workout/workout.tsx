@@ -2,14 +2,13 @@ import React, { useState } from 'react'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ImageBackground, StyleSheet, Alert, AppState, Button, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import Settings from "./settings";
-import Manualworkout from './manualworkout';
+import Manualworkout from '../../../manualworkout';
 
 export default function Workout() {
   const navigation = useNavigation();
 
   const handleManualWorkout = () => {
-    navigation.navigate(Manualworkout);
+    navigation.navigate(Manualworkout)
   };
 
   const handleAiGeneratedWorkout = () => {

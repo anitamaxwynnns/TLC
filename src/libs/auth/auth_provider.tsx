@@ -5,7 +5,7 @@ import {
     useEffect,
     useState,
 } from "react";
-import { supabase } from "./supabase";
+import { supabase } from "src/libs/database/supabase";
 import { Session } from "@supabase/supabase-js";
 
 const initialState: { session: Session | null } = { session: null };
@@ -18,11 +18,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
         });
-
         supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
         });
     }, []);
+
     return (
         <AuthContext.Provider value={{ session: session }}>
             {children}
