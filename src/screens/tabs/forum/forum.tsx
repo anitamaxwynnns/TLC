@@ -144,8 +144,9 @@ export default function Forum() {
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     return (
-        <SafeAreaView>
-            <View
+        <SafeAreaView style={{flex:1
+        }}>
+            <View 
                 style={{
                     alignItems: "flex-end",
                     padding: 10,
