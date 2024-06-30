@@ -19,7 +19,7 @@ export default function CreatePost({ route }: any) {
             body: text,
             image_url: imageUrl,
         });
-        navigation.navigate("Forum");
+        navigation.navigate("Forum", { refresh: true });
     }
 
     return (

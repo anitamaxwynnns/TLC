@@ -18,7 +18,7 @@ export type RootStackNavigatorParamsList = {
     Main: undefined;
     Profile: undefined;
     ProfilePic: undefined;
-    Forum: undefined;
+    Forum: any;
     CreatePost: { imageUrl: string };
     ImageSelector: undefined;
 };

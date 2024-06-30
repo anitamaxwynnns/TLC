@@ -315,7 +315,7 @@ function RenderComment({ item }: { item: Comment }) {
             />
             <View style={{ gap: 10 }}>
                 <View style={{ flexDirection: "row", gap: 5 }}>
-                    <Text style={{fontWeight:500}}>{authorName}</Text>
+                    <Text style={{ fontWeight: 500 }}>{authorName}</Text>
                     <Text>{new Date(item.created_at).toLocaleString()}</Text>
                 </View>
                 <Text>{item.body}</Text>
@@ -324,7 +324,7 @@ function RenderComment({ item }: { item: Comment }) {
     );
 }
 
-export default function Forum() {
+export default function Forum({ route }: any) {
     const [data, setData] = useState<Post[]>([]);
     const [visible, setVisible] = useState(false);
     const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
@@ -357,7 +357,7 @@ export default function Forum() {
         return () => {
             ignore = false;
         };
-    }, []);
+    }, [route]);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
