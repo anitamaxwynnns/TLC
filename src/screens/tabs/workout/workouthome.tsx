@@ -1,17 +1,11 @@
-import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
     View,
     Text,
-    ImageBackground,
     StyleSheet,
-    Alert,
-    AppState,
-    Button,
     TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Settings from "./settings";
 import { RootStackNavigatorParamsList } from "./workout";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -24,7 +18,7 @@ export default function WorkoutHome() {
     };
 
     const handleAiGeneratedWorkout = () => {
-        navigation.navigate("Settings");
+        navigation.navigate('manualworkout');
     };
 
     return (

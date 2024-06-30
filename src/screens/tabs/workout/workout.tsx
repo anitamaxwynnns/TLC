@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export type RootStackNavigatorParamsList = {
     manualworkout: undefined;
-    exerciseSubmission: undefined;
+    ExerciseSubmission: undefined;
     workouthome: undefined;
 };
 
@@ -13,14 +13,14 @@ const Stack = createNativeStackNavigator<RootStackNavigatorParamsList>();
 
 export default function Workout() {
     return (
-        <Stack.Navigator initialRouteName="manualworkout">
+        <Stack.Navigator initialRouteName="workouthome">
             <Stack.Screen
                 name="manualworkout"
                 component={ManualWorkout}
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                name="exerciseSubmission"
+                name="ExerciseSubmission"
                 component={ExerciseSubmission}
                 options={{ headerShown: false }}
             />

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { getManyExercises } from "./db";
+import { NavigationProp, useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigatorParamsList } from './workout';
 
 export default function ExerciseSubmission() {
   const route = useRoute();
   const { selectedExercises } = route.params;
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
 
   const GoHome = () => {
     Alert.alert(
@@ -17,13 +15,13 @@ export default function ExerciseSubmission() {
       [
         {
           text: "OK",
-          onPress: () => navigation.navigate('Main')
+          onPress: () => navigation.navigate('workouthome')
         }
       ],
     );
   };
 
-  const renderExercise = ({ item, index}) => (
+  const renderExercise = ({ item, index}: {item: any , index: number}) => (
     <View style={styles.exerciseItem}>
       <Text style={styles.exerciseText}>{index + 1}. {item.name}</Text>
       <Text style={styles.bodyPart}>{item.muscle}</Text>
