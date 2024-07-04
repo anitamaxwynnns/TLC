@@ -22,18 +22,13 @@ export default function AiWorkout({navigation}) {
         'https://api.openai.com/v1/chat/completions',
         {
           model: 'gpt-3.5-turbo',
-          max_tokens: 100,
+          max_tokens: 200,
           messages: [
-            { role: 'system', content: `Here is a list of exercises: ${exerciseNames}. 
-              Create a workout plan using these exercises.
-              Always generate the workout in this style
-              1. Barbell Bench Press - 4 sets of 8-10 reps
-              2. Cable Bench Press - 3 sets of 12-15 reps
-              3. Band Bench Press - 3 sets of 12-15 reps
-              4. Barbell Incline Bench Press - 4 sets of 8-10 reps
-              5. Band One Arm Twisting Chest Press - 3 sets of 12-15 reps
+            { role: 'system', content: `Here is a list of exercises: ${exerciseNames}. \n
+              Create a workout plan using these exercises. \n
+              Always generate the workout in this style no matter what 1. {EXERCISE} : {NUMBER OF SETS} sets of {RANGE OF REPETITIONS} reps.\n
               
-              There can be more or less than 5 exercises based on the prompt but the general structure of the list should remain the same` },
+              There can be any number of exercises based on the prompt but the general structure of the list should remain the same` },
             { role: 'user', content: prompt }
           ],
           n: 1,
@@ -49,6 +44,7 @@ export default function AiWorkout({navigation}) {
       );
 
       const generatedText = response.data.choices[0].message.content;
+      console.log(generatedText)
       const parsedExercises = parseGeneratedText(generatedText, exercises);
 
       navigation.navigate('AiWorkoutSubmission', { selectedExercises: parsedExercises });
@@ -74,10 +70,9 @@ export default function AiWorkout({navigation}) {
     const exercisesMap = new Map(exercises.map(exercise => [exercise.name, exercise.muscle]));
     const filteredExercises = text.split('\n').filter(line => /^\d+\./.test(line)).map((exercise, index) => {
 
-      const nameMatch = exercise.match(/^\d+\.\s*(.+?)\s*-\s*/);
-      let namefront = nameMatch ? nameMatch[1] : exercise.split(' - ')[0];
+      const nameMatch = exercise.match(/^\d+\.\s*(.+?)\s*:\s*/);
+      let namefront = nameMatch ? nameMatch[1] : exercise.split(' : ')[0];
       let name = namefront.trim();
-      console.log(name)
       let muscle = exercisesMap.get(name) || 'Unknown Muscle Group';
       let reps = 'Unknown';
       let sets = 'Unknown';

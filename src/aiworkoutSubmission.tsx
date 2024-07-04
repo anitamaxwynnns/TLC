@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
 
 export default function AiWorkoutSubmission() {
   const route = useRoute();
@@ -28,7 +28,7 @@ export default function AiWorkoutSubmission() {
 
   const renderExercise = ({ item, index }) => (
     <View style={styles.exerciseItem}>
-      <Text style={styles.exerciseText}> {item.name}</Text>
+      <Text style={styles.exerciseText}>{index + 1}. {item.name}</Text>
       <Text style={styles.bodyPart}>Muscle: {item.muscle}</Text>
       <Text style={styles.repsSets}>Sets: {item.sets}</Text>
       <Text style={styles.repsSets}>Reps: {item.reps}</Text>    
@@ -44,19 +44,26 @@ export default function AiWorkoutSubmission() {
         data={selectedExercises}
         renderItem={renderExercise}
         keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={
+          <View style={styles.footer}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+              <Text style={styles.buttonText}>Start Again</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={GoHome}>
+              <Text style={styles.buttonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        }
       />
-        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Start Again</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={GoHome}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  footer: {
+    padding: 16,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
-    width: '80%',
+    width: '90%',
   },
   workoutText: {
     marginTop: 20,
@@ -101,6 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
+    width: "100%",
   },
   exerciseText: {
     fontSize: 18,

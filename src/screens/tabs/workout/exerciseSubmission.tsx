@@ -27,8 +27,8 @@ export default function ExerciseSubmission() {
     <View style={styles.exerciseItem}>
       <Text style={styles.exerciseText}>{index + 1}. {item.name}</Text>
       <Text style={styles.bodyPart}>{item.muscle}</Text>
-      <Text style={styles.repsSets}>Reps: {item.reps}</Text>
       <Text style={styles.repsSets}>Sets: {item.sets}</Text>
+      <Text style={styles.repsSets}>Reps: {item.reps}</Text>
     </View>
   );
 
