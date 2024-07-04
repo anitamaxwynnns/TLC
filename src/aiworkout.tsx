@@ -14,7 +14,7 @@ export default function AiWorkout({navigation}) {
     setLoading(true);
     try {
       const exercises = await getExercises();
-      console.log('Exercises', exercises);
+      //console.log('Exercises', exercises);
       const exerciseMuscleGroups = exercises.map(exercise => exercise.muscle).join(',');
       const exerciseNames = exercises.map(exercise => exercise.name).join(', ');
 
@@ -74,8 +74,10 @@ export default function AiWorkout({navigation}) {
     const exercisesMap = new Map(exercises.map(exercise => [exercise.name, exercise.muscle]));
     const filteredExercises = text.split('\n').filter(line => /^\d+\./.test(line)).map((exercise, index) => {
 
-      let namefront = exercise.split(' - ')[0];
+      const nameMatch = exercise.match(/^\d+\.\s*(.+?)\s*-\s*/);
+      let namefront = nameMatch ? nameMatch[1] : exercise.split(' - ')[0];
       let name = namefront.trim();
+      console.log(name)
       let muscle = exercisesMap.get(name) || 'Unknown Muscle Group';
       let reps = 'Unknown';
       let sets = 'Unknown';
