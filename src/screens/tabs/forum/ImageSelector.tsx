@@ -14,6 +14,7 @@ export default function ImageSelector() {
     return (
         <View style={{ flex: 1 }}>
             <Appbar.Header>
+                <Appbar.BackAction onPress={() => navigation.goBack()} />
                 <Appbar.Content title="Select Image" />
             </Appbar.Header>
             <ImageSelectorProp
