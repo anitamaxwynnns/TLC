@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AiWorkout from "./aiworkout";
 import AiWorkoutSubmission from "./aiworkoutSubmission";
 import AddWorkout from "./addworkout";
+import WorkoutContent from "./workout-content";
 
 export type RootStackNavigatorParamsList = {
     manualworkout: undefined;
@@ -13,6 +14,7 @@ export type RootStackNavigatorParamsList = {
     AiWorkout: undefined;
     AiWorkoutSubmission: undefined;
     AddWorkout: undefined;
+    WorkoutContent: { workoutId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackNavigatorParamsList>();
@@ -48,6 +50,11 @@ export default function Workout() {
             <Stack.Screen
                 name="AddWorkout"
                 component={AddWorkout}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="WorkoutContent"
+                component={WorkoutContent}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>

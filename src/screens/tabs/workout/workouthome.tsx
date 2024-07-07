@@ -7,24 +7,35 @@ import { getManyWorkouts } from "src/libs/database/functions";
 import { RootStackNavigatorParamsList } from "./workout";
 
 function RenderWorkout({ item }: { item: any }) {
+    const navigation =
+        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     return (
-        <View
-            style={{
-                padding: 20,
-                borderWidth: 1,
-                borderColor: "grey",
-                borderRadius: 10,
-            }}
+        <Pressable
+            onPress={() =>
+                navigation.navigate("WorkoutContent", { workoutId: item.id })
+            }
         >
-            <Text style={{ fontSize: 20, fontWeight: 600 }}>{item.name}</Text>
-        </View>
+            <View
+                style={{
+                    padding: 20,
+                    borderWidth: 1,
+                    borderColor: "grey",
+                    borderRadius: 10,
+                }}
+            >
+                <Text style={{ fontSize: 20, fontWeight: 600 }}>
+                    {item.name}
+                </Text>
+            </View>
+        </Pressable>
     );
 }
 
 export default function WorkoutHome() {
     const { session } = useAuth();
     const [workouts, setWorkouts] = useState<{ name: string }[]>([]);
-    const navigation = useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+    const navigation =
+        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
     useEffect(() => {
         let ignore = false;
         getManyWorkouts(session?.user.id ?? "").then((result) => {
@@ -34,16 +45,24 @@ export default function WorkoutHome() {
                 }
             }
         });
-    });
+    }, []);
 
     return (
         <SafeAreaView>
             <View style={{ padding: 20, gap: 20 }}>
-                <View style={{ flexDirection: "row", alignItems:'center', justifyContent: 'space-between' }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
                     <Text style={{ fontSize: 35, fontWeight: 700 }}>
                         Workouts
                     </Text>
-                    <Pressable onPress={() => navigation.navigate('AddWorkout')}>
+                    <Pressable
+                        onPress={() => navigation.navigate("AddWorkout")}
+                    >
                         <View>
                             <Entypo name="plus" size={30} color="black" />
                         </View>

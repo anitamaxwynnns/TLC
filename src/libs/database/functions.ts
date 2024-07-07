@@ -46,7 +46,7 @@ export function getProfilePicUrl(userId: string) {
 export async function getManyWorkouts(userId: string) {
     const { data, error } = await supabase
         .from("workout")
-        .select("name")
+        .select("id, name")
         .eq("user_id", userId);
     if (error) {
         console.error(error);
@@ -78,5 +78,5 @@ export async function getOneWorkout(workoutId: string): Promise<Workout> {
         console.error(error);
         throw error;
     }
-    return data as any;
+    return data[0] as any;
 }
