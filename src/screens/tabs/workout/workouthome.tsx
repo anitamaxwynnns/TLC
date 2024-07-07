@@ -18,7 +18,7 @@ export default function WorkoutHome() {
     };
 
     const handleAiGeneratedWorkout = () => {
-        navigation.navigate('manualworkout');
+        navigation.navigate('AiWorkout');
     };
 
     return (

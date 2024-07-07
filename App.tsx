@@ -10,8 +10,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import CreatePost from "src/screens/tabs/forum/createpostscreen";
 import ImageSelector from "src/screens/tabs/forum/ImageSelector";
 import ExerciseSubmission from "src/screens/tabs/workout/exerciseSubmission";
-import Aiworkout from "./src/aiworkout";
-import AiWorkoutSubmission from "./src/aiworkoutSubmission";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -25,8 +23,6 @@ export type RootStackNavigatorParamsList = {
     CreatePost: { imageUrl: string };
     ImageSelector: undefined;
     ExerciseSubmission: { selectedExercises: any[] };
-    AiWorkout: undefined;
-    AiWorkoutSubmission: undefined;
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
@@ -90,16 +86,6 @@ export default function App() {
                         <Stack.Screen
                             name="ExerciseSubmission"
                             component={ExerciseSubmission}
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="AiWorkout"
-                            component={Aiworkout}
-                            options={{ headerShown: false }}
-                        />
-                        <Stack.Screen
-                            name="AiWorkoutSubmission"
-                            component={AiWorkoutSubmission}
                             options={{ headerShown: false }}
                         />
                     </Stack.Navigator>
