@@ -31,7 +31,7 @@ function RenderWorkout({ item }: { item: any }) {
     );
 }
 
-export default function WorkoutHome() {
+export default function WorkoutHome({ route }: any) {
     const { session } = useAuth();
     const [workouts, setWorkouts] = useState<{ name: string }[]>([]);
     const navigation =
@@ -45,7 +45,7 @@ export default function WorkoutHome() {
                 }
             }
         });
-    }, []);
+    }, [route]);
 
     return (
         <SafeAreaView>
@@ -72,6 +72,7 @@ export default function WorkoutHome() {
                 <FlatList
                     data={workouts}
                     renderItem={({ item }) => <RenderWorkout item={item} />}
+                    contentContainerStyle={{ gap: 20 }}
                 />
             </View>
         </SafeAreaView>

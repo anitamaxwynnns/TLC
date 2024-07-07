@@ -10,7 +10,7 @@ import WorkoutContent from "./workout-content";
 export type RootStackNavigatorParamsList = {
     manualworkout: undefined;
     ExerciseSubmission: undefined;
-    workouthome: undefined;
+    workouthome: any;
     AiWorkout: undefined;
     AiWorkoutSubmission: undefined;
     AddWorkout: undefined;

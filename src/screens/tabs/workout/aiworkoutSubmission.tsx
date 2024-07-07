@@ -1,124 +1,120 @@
-import React, { useEffect } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { NavigationProp, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import {
+    View,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    SafeAreaView,
+} from "react-native";
+import { RootStackNavigatorParamsList } from "./workout";
+import { supabase } from "src/libs/database/supabase";
+
+const renderExercise = ({ item }) => (
+    <View
+        style={{
+            borderWidth: 2,
+            borderRadius: 10,
+            gap: 5,
+            padding: 20,
+            borderColor: "grey",
+        }}
+    >
+        <Text style={{ fontSize: 20 }}>{item.name}</Text>
+        <Text style={{ fontSize: 15 }}>{item.muscle}</Text>
+        <View style={{ flexDirection: "row", gap: 25 }}>
+            <Text style={{ fontSize: 15 }}>Sets: {item.sets}</Text>
+            <Text style={{ fontSize: 15 }}>Reps: {item.reps}</Text>
+        </View>
+    </View>
+);
 
 export default function AiWorkoutSubmission() {
-  const route = useRoute();
-  const { selectedExercises } = route.params;
-  const navigation = useNavigation();
+    const route = useRoute();
+    const { workout: workoutParam } = route.params;
+    const workout = JSON.parse(workoutParam);
+    const navigation =
+        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
 
-  useEffect(() => {
-    console.log('Selected Exercises', selectedExercises);
-  }, [selectedExercises]);
+    const GoHome = async () => {
+        const newWorkout = await supabase
+            .from("workout")
+            .insert({ name: workout.name })
+            .select();
+        await supabase.from("workout_exercise").insert(
+            workout.exercises.map((exercise: any) => ({
+                workout_id: newWorkout.data?.at(0).id,
+                exercise_id: exercise.id,
+                sets: exercise.sets,
+                reps: exercise.reps,
+            })),
+        );
+        navigation.navigate("workouthome", { refresh: true });
+    };
 
-  const GoHome = () => {
-    Alert.alert(
-      "Workout Submitted",
-      "Your workout has been successfully submitted!",
-      [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate('Main')
-        }
-      ],
+    return (
+        <SafeAreaView style={{ height: "100%", width: "100%" }}>
+            <View style={{ paddingHorizontal: 20, gap: 20, flex: 1 }}>
+                <Text style={{ fontSize: 35, fontWeight: 700 }}>
+                    {workout.name}
+                </Text>
+                <FlatList
+                    data={workout.exercises}
+                    renderItem={renderExercise}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={{ gap: 20 }}
+                    ListFooterComponent={
+                        <View
+                            style={{
+                                gap: 5,
+                                paddingBottom: 20,
+                                flexDirection: "row",
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: "white",
+                                    padding: 15,
+                                    borderRadius: 30,
+                                    alignItems: "center",
+                                }}
+                                onPress={() => navigation.goBack()}
+                            >
+                                <Text
+                                    style={{
+                                        color: "black",
+                                        fontSize: 18,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Back
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: "black",
+                                    padding: 15,
+                                    borderRadius: 30,
+                                    alignItems: "center",
+                                }}
+                                onPress={GoHome}
+                            >
+                                <Text
+                                    style={{
+                                        color: "white",
+                                        fontSize: 18,
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                    Save
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                />
+            </View>
+        </SafeAreaView>
     );
-  };
-
-  const renderExercise = ({ item, index }) => (
-    <View style={styles.exerciseItem}>
-      <Text style={styles.exerciseText}>{index + 1}. {item.name}</Text>
-      <Text style={styles.bodyPart}>Muscle: {item.muscle}</Text>
-      <Text style={styles.repsSets}>Sets: {item.sets}</Text>
-      <Text style={styles.repsSets}>Reps: {item.reps}</Text>    
-    </View>
-  );
-
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-      <Text style={styles.header}>Selected Exercises</Text>
-      <FlatList
-        data={selectedExercises}
-        renderItem={renderExercise}
-        keyExtractor={(item, index) => index.toString()}
-        ListFooterComponent={
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-              <Text style={styles.buttonText}>Start Again</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={GoHome}>
-              <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
-          </View>
-        }
-      />
-      </View>
-    </SafeAreaView>
-  );
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    padding: 16,
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 32,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  placeholderText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  content: {
-    alignItems: 'center',
-    width: '90%',
-  },
-  workoutText: {
-    marginTop: 20,
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#000000',
-    padding: 15,
-    borderRadius: 30,
-    marginVertical: 10,
-    width: '100%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  exerciseItem: {
-    padding: 16,
-    marginVertical: 8,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    width: "100%",
-  },
-  exerciseText: {
-    fontSize: 18,
-  },
-  bodyPart: {
-    fontSize: 14,
-    color: '#555',
-  },
-  repsSets: {
-    fontSize: 16,
-    color: '#333',
-  },
-});
