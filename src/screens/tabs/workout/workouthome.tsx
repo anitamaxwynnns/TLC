@@ -1,73 +1,60 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { Entypo } from "@expo/vector-icons";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { FlatList, SafeAreaView, View, Text, Pressable } from "react-native";
+import { useAuth } from "src/libs/auth/auth_provider";
+import { getManyWorkouts } from "src/libs/database/functions";
 import { RootStackNavigatorParamsList } from "./workout";
-import { StackNavigationProp } from "@react-navigation/stack";
+
+function RenderWorkout({ item }: { item: any }) {
+    return (
+        <View
+            style={{
+                padding: 20,
+                borderWidth: 1,
+                borderColor: "grey",
+                borderRadius: 10,
+            }}
+        >
+            <Text style={{ fontSize: 20, fontWeight: 600 }}>{item.name}</Text>
+        </View>
+    );
+}
 
 export default function WorkoutHome() {
-    const navigation =
-        useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
-
-    const handleManualWorkout = () => {
-        navigation.navigate("manualworkout");
-    };
-
-    const handleAiGeneratedWorkout = () => {
-        navigation.navigate('AiWorkout');
-    };
+    const { session } = useAuth();
+    const [workouts, setWorkouts] = useState<{ name: string }[]>([]);
+    const navigation = useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+    useEffect(() => {
+        let ignore = false;
+        getManyWorkouts(session?.user.id ?? "").then((result) => {
+            if (!ignore) {
+                if (result !== undefined) {
+                    setWorkouts(result);
+                }
+            }
+        });
+    });
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.content}>
-                <Text style={styles.placeholderText}>Workout</Text>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleManualWorkout}
-                >
-                    <Text style={styles.buttonText}>Manual Workout</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleAiGeneratedWorkout}
-                >
-                    <Text style={styles.buttonText}>AI Generated Workout</Text>
-                </TouchableOpacity>
+        <SafeAreaView>
+            <View style={{ padding: 20, gap: 20 }}>
+                <View style={{ flexDirection: "row", alignItems:'center', justifyContent: 'space-between' }}>
+                    <Text style={{ fontSize: 35, fontWeight: 700 }}>
+                        Workouts
+                    </Text>
+                    <Pressable onPress={() => navigation.navigate('AddWorkout')}>
+                        <View>
+                            <Entypo name="plus" size={30} color="black" />
+                        </View>
+                    </Pressable>
+                </View>
+
+                <FlatList
+                    data={workouts}
+                    renderItem={({ item }) => <RenderWorkout item={item} />}
+                />
             </View>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    placeholderText: {
-        fontSize: 30,
-        fontWeight: "bold",
-    },
-    content: {
-        alignItems: "center",
-        width: "80%",
-    },
-    button: {
-        backgroundColor: "#000000",
-        padding: 15,
-        borderRadius: 30,
-        marginVertical: 10,
-        width: "100%",
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "white",
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-});
-

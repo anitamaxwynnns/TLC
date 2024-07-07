@@ -18,7 +18,8 @@ import { RootStackNavigatorParamsList } from "App";
 export default function ManualWorkout() {
     const [exercises, setExercises] = useState<any[]>([]);
     const [selectedExercises, setSelectedExercises] = useState<any[]>([]);
-    const navigation = useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+    const navigation =
+        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
 
     const HandleExerciseSubmission = () => {
         navigation.navigate("ExerciseSubmission", { selectedExercises });
@@ -83,27 +84,6 @@ export default function ManualWorkout() {
         </TouchableOpacity>
     );
 
-    const renderSelectedExercise = ({ item }) => (
-        <View key={item.name} style={styles.selectedExerciseItem}>
-            <Text style={styles.exerciseText}>{item.name}</Text>
-            <Text style={styles.bodyPart}>{item.muscle}</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Reps"
-                keyboardType="numeric"
-                value={item.reps.toString()}
-                onChangeText={(text) => handleRepsChange(item.name, text)}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Sets"
-                keyboardType="numeric"
-                value={item.sets.toString()}
-                onChangeText={(text) => handleSetsChange(item.name, text)}
-            />
-        </View>
-    );
-
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
@@ -116,17 +96,18 @@ export default function ManualWorkout() {
                     data={exercises}
                     renderItem={renderExercise}
                     keyExtractor={(item) => item.name}
+                    ListFooterComponent={<View style={{ paddingTop: 100 }} />}
                 />
                 {selectedExercises.length > 0 && (
-                    <View style={styles.selectedContainer}>
-                        <Text>
-                            Selected Exercises
-                        </Text>
-                        <ScrollView style={{flex:1}}>
-                            {selectedExercises.map((exercise) =>
-                                renderSelectedExercise({ item: exercise }),
-                            )}
-                        </ScrollView>
+                    <View
+                        style={{
+                            backgroundColor: "none",
+                            position: "absolute",
+                            bottom: 10,
+                            alignSelf: "center",
+                            width: "100%",
+                        }}
+                    >
                         <TouchableOpacity
                             style={styles.button}
                             onPress={HandleExerciseSubmission}
