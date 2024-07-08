@@ -13,29 +13,30 @@ import { Avatar as PaperAvatar } from "react-native-paper";
 export default function Profile() {
     const navigation =
         useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
-    const [user, setUser] = useState<any>();
+    const [user, setUser] = useState<{ name: string } | null>(null);
     const [loading, setLoading] = useState(true);
     const { session } = useAuth();
 
-    async function getUserInfo(): Promise<{ name: string } | undefined> {
+    async function getUserInfo(): Promise<{ name: string } | null> {
+        if (!session?.user?.id) {
+            return null;
+        }
+
         const { data, error } = await supabase
             .from("profile")
             .select("name")
-            .eq("user_id", session?.user.id);
+            .eq("user_id", session.user.id);
 
         if (error) {
             console.error(error);
-            return undefined;
+            return null;
         }
-        console.log(data);
-        return data[0];
+        return data.length > 0 ? data[0] : null;
     }
+
     useEffect(() => {
         let ignore = false;
         getUserInfo().then((result) => {
-            if (result === undefined) {
-                setUser("Error");
-            }
             if (!ignore) {
                 setUser(result);
                 setLoading(false);
@@ -57,6 +58,7 @@ export default function Profile() {
             </View>
         );
     }
+
     async function onPress() {
         await supabase.auth.signOut();
         navigation.navigate("StartScreen");
@@ -65,7 +67,7 @@ export default function Profile() {
     return (
         <SafeAreaView style={styles.container}>
             <PaperAvatar.Image source={{uri: getProfilePicUrl(session?.user.id ?? "") }} size={200} />
-            <Text style={styles.text}>{user.name}</Text>
+            <Text style={styles.text}>{user?.name}</Text>
             <Button
                 mode="contained"
                 theme={{ colors: { primary: "black" } }}
