@@ -1,4 +1,4 @@
-import { Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import {
     NavigationProp,
     useNavigation,
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
 import { getOneWorkout } from "src/libs/database/functions";
 import { RootStackNavigatorParamsList } from "./workout";
+import { supabase } from "src/libs/database/supabase";
 
 export default function WorkoutContent() {
     const route = useRoute();
@@ -27,6 +28,11 @@ export default function WorkoutContent() {
         });
     }, [workoutId]);
 
+    async function handleDelete() {
+        await supabase.from("workout").delete().eq("id", workoutId);
+        navigation.navigate("workouthome", { refresh: true });
+    }
+
     if (workout === undefined) {
         return <View></View>;
     }
@@ -34,16 +40,42 @@ export default function WorkoutContent() {
     return (
         <SafeAreaView style={{ height: "100%", width: "100%" }}>
             <View style={{ padding: 20, gap: 10, flex: 1 }}>
-                <Pressable onPress={() => navigation.goBack()}>
-                    <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                        <Entypo name="chevron-left" size={36} color="black" />
-                        <Text style={{ fontSize: 35, fontWeight: 700 }}>
-                            {workout.name}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Pressable onPress={() => navigation.goBack()}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Entypo
+                                name="chevron-left"
+                                size={36}
+                                color="black"
+                            />
+                            <Text style={{ fontSize: 30, fontWeight: 700 }}>
+                                {workout.name}
+                            </Text>
+                        </View>
+                    </Pressable>
+                    <Pressable onPress={handleDelete}>
+                        <Text
+                            style={{
+                                color: "darkred",
+                                fontSize: 15,
+                                fontWeight: 700,
+                            }}
+                        >
+                            Delete
                         </Text>
-                    </View>
-                </Pressable>
+                    </Pressable>
+                </View>
                 <FlatList
                     data={workout.workout_exercise}
                     contentContainerStyle={{ gap: 20 }}

@@ -38,8 +38,25 @@ Return the workout in the following JSON format:
       "id": "ID of the exercise from the comma separated table",
       "name": "name of the exercise from the comma separated table",
       "muscle": "muscle of the exercise from the comma separated table",
-      "sets": "number of sets",
-      "reps": "number of reps"
+      "sets": "integer only, no units",
+      "reps": "integer only, no units"
+    }
+  ]
+}
+'''
+
+Here is an example:
+
+'''
+{
+  "name": "example workout",
+  "exercises": [
+    {
+      "id": "0685",
+      "name": "Run",
+      "muscle": "Cardio",
+      "sets": 3,
+      "reps": 10
     }
   ]
 }
