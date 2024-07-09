@@ -24,7 +24,7 @@ export type RootStackNavigatorParamsList = {
     CreatePost: { imageUrl: string };
     ImageSelector: undefined;
     ExerciseSubmission: { selectedExercises: any[] };
-    Calender: undefined;
+    Calendar: undefined;
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
@@ -91,7 +91,7 @@ export default function App() {
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="Calender"
+                            name="Calendar"
                             component={WeekScheduler}
                             options={{ headerShown: false }}
                         />
