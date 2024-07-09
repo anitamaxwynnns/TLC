@@ -1,3 +1,4 @@
+import { FontAwesome6 } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
 import React, { useState } from "react";
@@ -10,6 +11,7 @@ import {
     FlatList,
     SafeAreaView,
     Pressable,
+    ScrollView,
 } from "react-native";
 
 type Events = {
@@ -39,81 +41,56 @@ export default function WeekScheduler() {
         Sunday: [],
     });
 
-    const handleAddEvent = (day: string) => {
-        Alert.prompt(
-            "New Event",
-            `Enter event for ${day}`,
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                {
-                    text: "OK",
-                    onPress: (event) => {
-                        if (event) {
-                            setEvents((prevEvents) => ({
-                                ...prevEvents,
-                                [day]: [...prevEvents[day], event],
-                            }));
-                        }
-                    },
-                },
-            ],
-            "plain-text",
-        );
-    };
+    function handleAddEvent(day: string) {
+    }
 
-    const renderEvent = (day: string) => {
+    function renderEvent(day: string) {
         return (
-            <View style={styles.dayContainer} key={day}>
-                <Text style={styles.dayTitle}>{day}</Text>
-                <Button title="Add Event" onPress={() => handleAddEvent(day)} />
-                <FlatList
-                    data={events[day]}
-                    keyExtractor={(item, index) => `${day}-${index}`}
-                    renderItem={({ item }) => (
-                        <Text style={styles.eventItem}>{item}</Text>
-                    )}
-                    ListEmptyComponent={
-                        <Text style={styles.emptyDate}>
-                            No events for this day.
-                        </Text>
-                    }
-                />
+            <View
+                key={day}
+                style={{
+                    backgroundColor: "white",
+                    padding: 15,
+                    borderRadius: 10,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 5,
+                    gap: 20,
+                    justifyContent: "space-between",
+                }}
+            >
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 40}}>
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                        {day}
+                    </Text>
+                    <Pressable onPress={handleAddEvent}>
+                        <FontAwesome6 name="add" size={24} color="black" />
+                    </Pressable>
+                </View>
             </View>
         );
-    };
+    }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Pressable
-                style={{ gap: 20, padding: 20 }}
-                onPress={() => navigation.goBack()}
-            >
-                <Text style={{ fontSize: 15 }}>Back</Text>
-            </Pressable>
-            {daysOfWeek.map((day) => renderEvent(day))}
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
+                <Pressable
+                    style={{ gap: 20, padding: 20 }}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Text style={{ fontSize: 15 }}>Back</Text>
+                </Pressable>
+                <ScrollView contentContainerStyle={{ gap: 30 }}>
+                    {daysOfWeek.map((day) => renderEvent(day))}
+                </ScrollView>
+            </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: "#f0f0f0",
-    },
-    dayContainer: {
-        backgroundColor: "white",
-        padding: 15,
-        marginBottom: 20,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-    },
+    dayContainer: {},
     dayTitle: {
         fontSize: 18,
         fontWeight: "bold",
