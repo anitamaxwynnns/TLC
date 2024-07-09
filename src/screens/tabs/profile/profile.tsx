@@ -8,7 +8,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "App";
 import { getProfilePicUrl } from "src/libs/database/functions";
 import { Avatar as PaperAvatar } from "react-native-paper";
-import WeekScheduler from "../calendar/scheduler";
 export default function Profile() {
     const navigation =
         useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
@@ -64,11 +63,10 @@ export default function Profile() {
         navigation.navigate("StartScreen");
     }
 
-    function RenderCalender() {
-       navigation.navigate('Calender') 
-
+    function RenderCalendar() {
+        navigation.navigate("Calendar");
     }
-    
+
     return (
         <SafeAreaView
             style={{
@@ -78,28 +76,37 @@ export default function Profile() {
                 flex: 1,
             }}
         >
-            <PaperAvatar.Image
-                source={{ uri: getProfilePicUrl(session?.user.id ?? "") }}
-                size={200}
-            />
-            <Text style={{ fontSize: 40, fontWeight: 500 }}>{user?.name}</Text>
-            <View style={{ paddingTop: 30, gap: 10 }}></View>
-            <Pressable onPress={RenderCalender}>
-                <Text style={{fontSize: 30, color: 'blue', padding: 50 }}> View Calendar</Text>
-            </Pressable>
-            <Pressable
-                onPress={onPress}
-                style={{
-                    backgroundColor: "black",
-                    borderRadius: 20,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                }}
-            >
-                <Text style={{ color: "white", fontSize: 15 }}>Log Out</Text>
-            </Pressable>
+            <View style={{ alignItems: "center", padding: 60, gap: 20 }}>
+                <PaperAvatar.Image
+                    source={{ uri: getProfilePicUrl(session?.user.id ?? "") }}
+                    size={200}
+                />
+                <Text style={{ fontSize: 40, fontWeight: 500 }}>
+                    {user?.name}
+                </Text>
+                <View style={{ paddingTop: 30, gap: 10 }}></View>
+                <Pressable onPress={RenderCalendar}>
+                    <Text style={{ fontSize: 30, color: "blue", padding: 50 }}>
+                        {" "}
+                        View Calendar
+                    </Text>
+                </Pressable>
+                <Pressable
+                    onPress={onPress}
+                    style={{
+                        backgroundColor: "black",
+                        borderRadius: 20,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                    }}
+                >
+                    <Text style={{ color: "white", fontSize: 15 }}>
+                        Log Out
+                    </Text>
+                </Pressable>
+            </View>
         </SafeAreaView>
     );
 }
