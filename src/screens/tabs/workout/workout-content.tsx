@@ -16,7 +16,7 @@ export default function WorkoutContent() {
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
 
-    useEffect(() => {
+   useEffect(() => {
         let ignore = false;
         getOneWorkout(workoutId).then((result) => {
             if (!ignore) {
