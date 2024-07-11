@@ -3,22 +3,17 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
 import React, { useEffect, useState } from "react";
 import {
-    View,
-    Text,
-    Button,
-    Alert,
-    StyleSheet,
     FlatList,
-    SafeAreaView,
+    Modal,
     Pressable,
-    ScrollView,
+    SafeAreaView,
+    Text,
+    View,
 } from "react-native";
 import { useAuth } from "src/libs/auth/auth_provider";
 import { supabase } from "src/libs/database/supabase";
-
-type Events = {
-    [key: string]: string[];
-};
+import { Dropdown } from "react-native-element-dropdown";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const daysOfWeek = [
     "Monday",
@@ -30,7 +25,9 @@ const daysOfWeek = [
     "Sunday",
 ];
 
-function renderEvent() {}
+function RenderEvent({ event }: { event: any }) {
+    return <View></View>;
+}
 
 function RenderDay({
     day,
@@ -41,7 +38,10 @@ function RenderDay({
     workouts: any[];
     userId: string;
 }) {
+    const [modalVisible, setModalVisible] = useState(false);
     const [events, setEvents] = useState<any[]>([]);
+    const [workoutdropdown, setWorkoutdropdown] = useState("");
+    const [time, setTime] = useState<any>(null);
 
     useEffect(() => {
         let ignore = false;
@@ -62,34 +62,121 @@ function RenderDay({
     }, []);
 
     return (
-        <View
-            style={{
-                backgroundColor: "white",
-                padding: 20,
-                borderRadius: 10,
-                gap: 20,
-                justifyContent: "space-between",
-                overflow: "visible",
-            }}
-        >
+        <>
             <View
                 style={{
-                    flexDirection: "row",
+                    backgroundColor: "white",
+                    padding: 20,
+                    borderRadius: 10,
+                    gap: 20,
                     justifyContent: "space-between",
-                    paddingBottom: 40,
+                    overflow: "visible",
                 }}
             >
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>{day}</Text>
-                <Pressable onPress={handleAddEvent}>
-                    <FontAwesome6 name="add" size={24} color="black" />
-                </Pressable>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingBottom: 40,
+                    }}
+                >
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                        {day}
+                    </Text>
+                    <Pressable onPress={() => setModalVisible(true)}>
+                        <FontAwesome6 name="add" size={24} color="black" />
+                    </Pressable>
+                </View>
+                <FlatList
+                    data={events}
+                    renderItem={({ item }) => <RenderEvent event={item} />}
+                />
             </View>
-        </View>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <SafeAreaView>
+                    <View
+                        style={{
+                            backgroundColor: "rgba(52, 52, 52, 0.8)",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            padding: 20,
+                            paddingTop: 70,
+                            paddingBottom: 80,
+                            width: "100%",
+                            height: "100%",
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                borderRadius: 20,
+                                width: "100%",
+                                height: "100%",
+                                padding: 30,
+                                gap: 30,
+                            }}
+                        >
+                            <View style={{ alignSelf: "flex-start" }}>
+                                <Pressable
+                                    onPress={() => setModalVisible(false)}
+                                >
+                                    <Text>Back</Text>
+                                </Pressable>
+                            </View>
+                            <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                                Select Workout
+                            </Text>
+                            <Dropdown
+                                data={workouts}
+                                labelField="name"
+                                valueField="id"
+                                onChange={(item) => {
+                                    setWorkoutdropdown(item.value);
+                                }}
+                                value={workoutdropdown}
+                                placeholder="Select"
+                                style={{
+                                    borderWidth: 1,
+                                    padding: 15,
+                                    borderRadius: 10,
+                                    borderColor: "grey",
+                                }}
+                            />
+                            <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                                Choose Time
+                            </Text>
+                            <RNDateTimePicker
+                                mode="time"
+                                value={new Date()}
+                                style={{ alignSelf: "center", width: 100 }}
+                                display="compact"
+                                onChange={(time) => setTime(time)}
+                            />
+                            <Pressable
+                                onPress={() => setModalVisible(false)}
+                                style={{
+                                    alignSelf: "center",
+                                    borderRadius: 15,
+                                    borderWidth: 1,
+                                    padding: 10,
+                                    backgroundColor: "black",
+                                }}
+                            >
+                                <Text style={{ fontSize: 15, color: "white" }}>
+                                    Submit
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </SafeAreaView>
+            </Modal>
+        </>
     );
-}
-
-function handleAddEvent(day: string) {
-    return;
 }
 
 export default function WeekScheduler() {
@@ -112,6 +199,7 @@ export default function WeekScheduler() {
                 if (!ignore) {
                     if (result !== undefined && result.data) {
                         setWorkouts(result.data);
+                        console.log(workouts);
                     }
                 }
             });

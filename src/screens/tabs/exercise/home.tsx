@@ -1,5 +1,8 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getExerciseGifUrl, getManyExercises } from "src/libs/database/functions";
+import {
+    getExerciseGifUrl,
+    getManyExercises,
+} from "src/libs/database/functions";
 import { useState, useEffect, useMemo } from "react";
 import {
     View,
