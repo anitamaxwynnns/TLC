@@ -1,4 +1,4 @@
-import { FontAwesome6 } from "@expo/vector-icons";
+import { Entypo, Feather, FontAwesome6 } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
 import React, { useEffect, useState } from "react";
@@ -13,7 +13,7 @@ import {
 import { useAuth } from "src/libs/auth/auth_provider";
 import { supabase } from "src/libs/database/supabase";
 import { Dropdown } from "react-native-element-dropdown";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
+import DatePicker from "@react-native-community/datetimepicker";
 
 const daysOfWeek = [
     "Monday",
@@ -25,8 +25,61 @@ const daysOfWeek = [
     "Sunday",
 ];
 
-function RenderEvent({ event }: { event: any }) {
-    return <View></View>;
+function RenderEvent({
+    event,
+    editable,
+    handleRemove,
+}: {
+    event: any;
+    editable: boolean;
+    handleRemove: any;
+}) {
+    return (
+        <View
+            style={{
+                paddingVertical: 15,
+                flexDirection: "row",
+                justifyContent: "space-between",
+            }}
+        >
+            <Text style={{ fontSize: 15, fontWeight: 500 }}>
+                {event.workout.name}
+            </Text>
+            {editable ? (
+                <View
+                    style={{
+                        gap: 10,
+                        flexDirection: "row",
+                        alignItems: "center",
+                    }}
+                >
+                    <Text style={{ fontSize: 12, fontStyle: "italic" }}>
+                        {new Date(
+                            `1971-01-01T${event.time}`,
+                        ).toLocaleTimeString(undefined, {
+                            timeStyle: "short",
+                        })}
+                    </Text>
+                    <Pressable onPress={handleRemove}>
+                        <Entypo
+                            name="squared-minus"
+                            size={20}
+                            color="darkred"
+                        />
+                    </Pressable>
+                </View>
+            ) : (
+                <Text style={{ fontSize: 12, fontStyle: "italic" }}>
+                    {new Date(`1971-01-01T${event.time}`).toLocaleTimeString(
+                        undefined,
+                        {
+                            timeStyle: "short",
+                        },
+                    )}
+                </Text>
+            )}
+        </View>
+    );
 }
 
 function RenderDay({
@@ -40,15 +93,18 @@ function RenderDay({
 }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [events, setEvents] = useState<any[]>([]);
-    const [workoutdropdown, setWorkoutdropdown] = useState("");
-    const [time, setTime] = useState<any>(null);
+    const [workoutdropdown, setWorkoutdropdown] = useState<any>(null);
+    const [time, setTime] = useState<Date>(new Date());
+    const [editable, setEditable] = useState(false);
 
     useEffect(() => {
         let ignore = false;
         supabase
             .from("calendar")
-            .select("day, workout (name), time")
+            .select("id, day, workout (name), time")
             .eq("user_id", userId)
+            .eq("day", day)
+            .order("time", { ascending: true })
             .then((result) => {
                 if (!ignore) {
                     if (result !== undefined && result.data) {
@@ -60,6 +116,44 @@ function RenderDay({
                 };
             });
     }, []);
+
+    function handleRemove(id: any) {
+        return async () => {
+            await supabase.from("calendar").delete().eq("id", id);
+            supabase
+                .from("calendar")
+                .select("id, day, workout (name), time")
+                .eq("user_id", userId)
+                .eq("day", day)
+                .order("time", { ascending: true })
+                .then((result) => {
+                    if (result !== undefined && result.data) {
+                        setEvents(result.data);
+                    }
+                });
+        };
+    }
+
+    async function handleSubmit() {
+        await supabase.from("calendar").insert({
+            time: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}.${time.getMilliseconds()}`,
+            workout_id: workoutdropdown,
+            day: day,
+        });
+        supabase
+            .from("calendar")
+            .select("id, day, workout (name), time")
+            .eq("user_id", userId)
+            .eq("day", day)
+            .order("time", { ascending: true })
+            .then((result) => {
+                if (result !== undefined && result.data) {
+                    setEvents(result.data);
+                }
+            });
+
+        setModalVisible(false);
+    }
 
     return (
         <>
@@ -77,19 +171,29 @@ function RenderDay({
                     style={{
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        paddingBottom: 40,
                     }}
                 >
                     <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                         {day}
                     </Text>
-                    <Pressable onPress={() => setModalVisible(true)}>
-                        <FontAwesome6 name="add" size={24} color="black" />
-                    </Pressable>
+                    <View style={{ gap: 20, flexDirection: "row" }}>
+                        <Pressable onPress={() => setEditable((curr) => !curr)}>
+                            <Feather name="edit-2" size={24} color="black" />
+                        </Pressable>
+                        <Pressable onPress={() => setModalVisible(true)}>
+                            <FontAwesome6 name="add" size={24} color="black" />
+                        </Pressable>
+                    </View>
                 </View>
                 <FlatList
                     data={events}
-                    renderItem={({ item }) => <RenderEvent event={item} />}
+                    renderItem={({ item }) => (
+                        <RenderEvent
+                            event={item}
+                            editable={editable}
+                            handleRemove={handleRemove(item.id)}
+                        />
+                    )}
                 />
             </View>
             <Modal
@@ -128,37 +232,41 @@ function RenderDay({
                                     <Text>Back</Text>
                                 </Pressable>
                             </View>
-                            <Text style={{ fontSize: 20, fontWeight: 500 }}>
-                                Select Workout
-                            </Text>
-                            <Dropdown
-                                data={workouts}
-                                labelField="name"
-                                valueField="id"
-                                onChange={(item) => {
-                                    setWorkoutdropdown(item.value);
-                                }}
-                                value={workoutdropdown}
-                                placeholder="Select"
-                                style={{
-                                    borderWidth: 1,
-                                    padding: 15,
-                                    borderRadius: 10,
-                                    borderColor: "grey",
-                                }}
-                            />
-                            <Text style={{ fontSize: 20, fontWeight: 500 }}>
-                                Choose Time
-                            </Text>
-                            <RNDateTimePicker
-                                mode="time"
-                                value={new Date()}
-                                style={{ alignSelf: "center", width: 100 }}
-                                display="compact"
-                                onChange={(time) => setTime(time)}
-                            />
+                            <View style={{ flex: 1, gap: 30 }}>
+                                <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                                    Select Workout
+                                </Text>
+                                <Dropdown
+                                    data={workouts}
+                                    labelField="name"
+                                    valueField="id"
+                                    onChange={(item) =>
+                                        setWorkoutdropdown(item.id)
+                                    }
+                                    value={workoutdropdown}
+                                    placeholder="Select"
+                                    style={{
+                                        borderWidth: 1,
+                                        padding: 15,
+                                        borderRadius: 10,
+                                        borderColor: "grey",
+                                    }}
+                                />
+                                <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                                    Choose Time
+                                </Text>
+                                <DatePicker
+                                    mode="time"
+                                    display="inline"
+                                    value={time}
+                                    onChange={(_, date) =>
+                                        date && setTime(date)
+                                    }
+                                    style={{ alignSelf: "center" }}
+                                />
+                            </View>
                             <Pressable
-                                onPress={() => setModalVisible(false)}
+                                onPress={handleSubmit}
                                 style={{
                                     alignSelf: "center",
                                     borderRadius: 15,
@@ -199,7 +307,6 @@ export default function WeekScheduler() {
                 if (!ignore) {
                     if (result !== undefined && result.data) {
                         setWorkouts(result.data);
-                        console.log(workouts);
                     }
                 }
             });
