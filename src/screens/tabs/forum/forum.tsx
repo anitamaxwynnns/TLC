@@ -85,6 +85,9 @@ function RenderPost({
                         setLikes(result.count);
                     }
                 }
+                return () => {
+                    ignore = true
+                }
             });
         supabase
             .from("profile")

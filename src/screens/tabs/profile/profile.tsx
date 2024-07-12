@@ -1,20 +1,19 @@
 import { supabase } from "src/libs/database/supabase";
-import { View, Text, Image, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView, Pressable } from "react-native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Button, MD2Colors } from "react-native-paper";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import Avatar from "./avatar";
 import { useAuth } from "src/libs/auth/auth_provider";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "App";
 import { getProfilePicUrl } from "src/libs/database/functions";
 import { Avatar as PaperAvatar } from "react-native-paper";
-
 export default function Profile() {
     const navigation =
         useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
     const [user, setUser] = useState<{ name: string } | null>(null);
     const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState("");
     const { session } = useAuth();
 
     async function getUserInfo(): Promise<{ name: string } | null> {
@@ -49,7 +48,7 @@ export default function Profile() {
 
     if (loading) {
         return (
-            <View style={styles.container}>
+            <View>
                 <ActivityIndicator
                     animating={true}
                     color={MD2Colors.black}
@@ -64,37 +63,50 @@ export default function Profile() {
         navigation.navigate("StartScreen");
     }
 
+    function RenderCalendar() {
+        navigation.navigate("Calendar");
+    }
+
     return (
-        <SafeAreaView style={styles.container}>
-            <PaperAvatar.Image source={{uri: getProfilePicUrl(session?.user.id ?? "") }} size={200} />
-            <Text style={styles.text}>{user?.name}</Text>
-            <Button
-                mode="contained"
-                theme={{ colors: { primary: "black" } }}
-                style={styles.button}
-                onPress={onPress}
-            >
-                {"Log Out"}
-            </Button>
+        <SafeAreaView
+            style={{
+                alignItems: "center",
+                gap: 20,
+                backgroundColor: "white",
+                flex: 1,
+            }}
+        >
+            <View style={{ alignItems: "center", padding: 60, gap: 20 }}>
+                <PaperAvatar.Image
+                    source={{ uri: getProfilePicUrl(session?.user.id ?? "") }}
+                    size={200}
+                />
+                <Text style={{ fontSize: 40, fontWeight: 500 }}>
+                    {user?.name}
+                </Text>
+                <View style={{ paddingTop: 30, gap: 10 }}></View>
+                <Pressable onPress={RenderCalendar}>
+                    <Text style={{ fontSize: 30, color: "blue", padding: 50 }}>
+                        {" "}
+                        View Calendar
+                    </Text>
+                </Pressable>
+                <Pressable
+                    onPress={onPress}
+                    style={{
+                        backgroundColor: "black",
+                        borderRadius: 20,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                    }}
+                >
+                    <Text style={{ color: "white", fontSize: 15 }}>
+                        Log Out
+                    </Text>
+                </Pressable>
+            </View>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-        height: "100%",
-    },
-    image: {
-        marginTop: 100,
-    },
-    text: {
-        fontSize: 35,
-        marginTop: 10,
-    },
-    button: {
-        marginTop: 130,
-    },
-});

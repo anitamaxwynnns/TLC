@@ -10,6 +10,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import CreatePost from "src/screens/tabs/forum/createpostscreen";
 import ImageSelector from "src/screens/tabs/forum/ImageSelector";
 import ExerciseSubmission from "src/screens/tabs/workout/exerciseSubmission";
+import WeekScheduler from "src/screens/tabs/calendar/scheduler";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -23,6 +24,7 @@ export type RootStackNavigatorParamsList = {
     CreatePost: { imageUrl: string };
     ImageSelector: undefined;
     ExerciseSubmission: { selectedExercises: any[] };
+    Calendar: undefined;
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
@@ -86,6 +88,11 @@ export default function App() {
                         <Stack.Screen
                             name="ExerciseSubmission"
                             component={ExerciseSubmission}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Calendar"
+                            component={WeekScheduler}
                             options={{ headerShown: false }}
                         />
                     </Stack.Navigator>
