@@ -50,25 +50,6 @@ export default function ManualWorkout() {
         }
     };
 
-    const handleRepsChange = (name, reps) => {
-        setSelectedExercises(
-            selectedExercises.map((item) =>
-                item.name === name
-                    ? { ...item, reps: reps ? parseInt(reps) : "" }
-                    : item,
-            ),
-        );
-    };
-
-    const handleSetsChange = (name, sets) => {
-        setSelectedExercises(
-            selectedExercises.map((item) =>
-                item.name === name
-                    ? { ...item, sets: sets ? parseInt(sets) : "" }
-                    : item,
-            ),
-        );
-    };
 
     const renderExercise = ({ item }) => (
         <TouchableOpacity
