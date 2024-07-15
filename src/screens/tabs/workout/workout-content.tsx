@@ -1,4 +1,4 @@
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import {
     NavigationProp,
     useNavigation,
@@ -17,7 +17,7 @@ export default function WorkoutContent() {
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
 
-   useEffect(() => {
+    useEffect(() => {
         let ignore = false;
         getOneWorkout(workoutId).then((result) => {
             if (!ignore) {
@@ -125,6 +125,11 @@ export default function WorkoutContent() {
                         backgroundColor: "black",
                         width: "100%",
                     }}
+                    onPress={() =>
+                        navigation.navigate("TrackWorkout", {
+                            workoutId: workoutId,
+                        })
+                    }
                 >
                     <Text
                         style={{
