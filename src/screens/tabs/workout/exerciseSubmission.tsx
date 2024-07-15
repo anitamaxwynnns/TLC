@@ -48,7 +48,7 @@ export default function ExerciseSubmission() {
         );
     };
 
-    const renderExercise = ({ item, index }: { item: any; index: number }) => (
+    const renderExercise = ({ item }: { item: any }) => (
         <View style={styles.exerciseItem}>
             <View style={{ gap: 2 }}>
                 <Text style={styles.exerciseText}>{item.name}</Text>
