@@ -2,8 +2,8 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
 import { getOneWorkout } from "src/libs/database/functions";
-import { supabase } from "src/libs/database/supabase";
 import { RootStackNavigatorParamsList } from "./workout";
+import { Entypo } from "@expo/vector-icons";
 
 type Exercises = {
     exercise_id: number;
@@ -11,8 +11,56 @@ type Exercises = {
     reps: number;
 };
 
-function renderExercise({ item }: { item: Exercises }) {
-    return <View></View>;
+function renderItem({
+    item,
+    index,
+}: {
+    item: {
+        sets: any;
+        reps: any;
+        exercise_table: {
+            name: any;
+            muscle: any;
+        };
+    };
+    index: number;
+}) {
+    return (
+        <View key={index} style={{ gap: 10, padding: 10 }}>
+            <View>
+                <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                    {item.exercise_table.name}
+                </Text>
+            </View>
+            <View
+                style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+                <View style={{ alignItems: "center", gap: 5 }}>
+                    <Text style={{ fontSize: 18, fontWeight: 500 }}>Sets</Text>
+                    {Array.from({ length: item.sets }, (_, i) => (
+                        <View key={`${index}-${i}`} style={{}}>
+                            <Text style={{ fontSize: 15 }}>{i + 1}</Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={{ alignItems: "center", gap: 5 }}>
+                    <Text style={{ fontSize: 18, fontWeight: 500 }}>Reps</Text>
+                    {Array.from({ length: item.sets }, (_, i) => (
+                        <View key={`${index}-${i}`} style={{}}>
+                            <Text style={{ fontSize: 15 }}>{item.reps}</Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={{ alignItems: "center", gap: 5 }}>
+                    <Entypo name="check" size={24} color="black" />
+                    {Array.from({ length: item.sets }, (_, i) => (
+                        <View key={`${index}-${i}`} style={{}}>
+                        </View>
+                    ))}
+                </View>
+            </View>
+        </View>
+    );
 }
 
 export default function TrackWorkout({ route }: any) {
@@ -33,43 +81,16 @@ export default function TrackWorkout({ route }: any) {
     }, [workoutId]);
 
     return (
-        <SafeAreaView>
-            <View style={{padding: 20}}>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ padding: 20 }}>
                 <Pressable onPress={() => navigation.goBack()}>
-                    <Text style={{fontSize: 15, fontWeight: 500 }}>Back</Text>
+                    <Text style={{ fontSize: 15, fontWeight: 500 }}>Back</Text>
                 </Pressable>
             </View>
             <FlatList
                 data={workouts.workout_exercise}
-                renderItem={({
-                    item,
-                }: {
-                    item: {
-                        sets: any;
-                        reps: any;
-                        exercise_table: {
-                            name: any;
-                            muscle: any;
-                        };
-                    };
-                }) => (
-                    <View
-                        style={{
-                            borderWidth: 2,
-                            borderRadius: 10,
-                            gap: 5,
-                            padding: 20,
-                            borderColor: "grey",
-                        }}
-                    >
-                        <Text style={{ fontSize: 20 }}>
-                            {item.exercise_table.name}
-                        </Text>
-                        <View style={{ flexDirection: "row", gap: 25 }}>
-                            <Text>Set 1</Text>
-                        </View>
-                    </View>
-                )}
+                contentContainerStyle={{ gap: 20 }}
+                renderItem={renderItem}
             />
         </SafeAreaView>
     );
