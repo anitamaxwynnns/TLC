@@ -41,16 +41,17 @@ function RenderItem({
                     padding: 10,
                     borderColor: "grey",
                     borderRadius: 10,
+                    paddingRight: 30
                 }}
             >
-                <Text style={{ fontSize: 24, fontWeight: 500 }}>Sets</Text>
-                <Text style={{ fontSize: 24, fontWeight: 500 }}>Reps</Text>
-                <Entypo
-                    name="check"
-                    size={24}
-                    color="black"
-                    style={{ marginLeft: 5 }}
-                />
+                    <Text style={{ fontSize: 24, fontWeight: 500 }}>Sets</Text>
+                    <Text style={{ fontSize: 24, fontWeight: 500 }}>Reps</Text>
+                    <Entypo
+                        name="check"
+                        size={24}
+                        color="black"
+                        style={{ marginLeft: 5 }}
+                    />
             </View>
             {item.sets.map((set, setIndex) => (
                 <View
@@ -67,10 +68,10 @@ function RenderItem({
                     }}
                 >
                     <View style={{ gap: 5 }}>
-                        <Text>{set.set}</Text>
+                        <Text style={{ fontSize: 20 }}>{set.set}</Text>
                     </View>
                     <View style={{ gap: 5 }}>
-                        <Text>{set.reps}</Text>
+                        <Text style={{ fontSize: 20 }}>{set.reps}</Text>
                     </View>
                     <View style={{ marginTop: 5 }}>
                         <View style={{ transform: [{ scale: 1.25 }] }}>
@@ -79,6 +80,8 @@ function RenderItem({
                                 onPress={() =>
                                     checkSet(exerciseIndex, setIndex)
                                 }
+                                color="black"
+                                uncheckedColor="black"
                             />
                         </View>
                     </View>
@@ -139,6 +142,9 @@ export default function TrackWorkout({ route }: any) {
         setWorkouts(updated);
     }
 
+    function handleWorkoutSubmit() {
+        navigation.navigate("workouthome");
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ padding: 20 }}>
@@ -167,6 +173,7 @@ export default function TrackWorkout({ route }: any) {
                                 padding: 20,
                                 width: "100%",
                             }}
+                            onPress={handleWorkoutSubmit}
                         >
                             <Text
                                 style={{
