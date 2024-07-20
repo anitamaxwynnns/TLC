@@ -11,6 +11,7 @@ import CreatePost from "src/screens/tabs/forum/createpostscreen";
 import ImageSelector from "src/screens/tabs/forum/ImageSelector";
 import ExerciseSubmission from "src/screens/tabs/workout/exerciseSubmission";
 import WeekScheduler from "src/screens/tabs/calendar/scheduler";
+import WorkoutHistory from "src/screens/tabs/workout/workout-history";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -25,6 +26,7 @@ export type RootStackNavigatorParamsList = {
     ImageSelector: undefined;
     ExerciseSubmission: { selectedExercises: any[] };
     Calendar: undefined;
+    WorkoutHistory: undefined;
 };
 
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
@@ -93,6 +95,11 @@ export default function App() {
                         <Stack.Screen
                             name="Calendar"
                             component={WeekScheduler}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="WorkoutHistory"
+                            component={WorkoutHistory}
                             options={{ headerShown: false }}
                         />
                     </Stack.Navigator>
