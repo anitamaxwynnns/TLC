@@ -2,12 +2,13 @@ import { supabase } from "src/libs/database/supabase";
 import { View, Text, SafeAreaView, Pressable } from "react-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAuth } from "src/libs/auth/auth_provider";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "App";
 import { getProfilePicUrl } from "src/libs/database/functions";
 import { Avatar as PaperAvatar } from "react-native-paper";
+import { WorkoutStackNavigatorParamsList } from "../workout/workout";
 export default function Profile() {
     const navigation =
         useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
@@ -84,28 +85,54 @@ export default function Profile() {
                 <Text style={{ fontSize: 40, fontWeight: 500 }}>
                     {user?.name}
                 </Text>
-                <View style={{ paddingTop: 30, gap: 10 }}></View>
-                <Pressable onPress={RenderCalendar}>
-                    <Text style={{ fontSize: 30, color: "blue", padding: 50 }}>
-                        {" "}
-                        View Calendar
-                    </Text>
-                </Pressable>
-                <Pressable
-                    onPress={onPress}
-                    style={{
-                        backgroundColor: "black",
-                        borderRadius: 20,
-                        paddingLeft: 20,
-                        paddingRight: 20,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                    }}
-                >
-                    <Text style={{ color: "white", fontSize: 15 }}>
-                        Log Out
-                    </Text>
-                </Pressable>
+                <View style={{ paddingTop: 30, gap: 10 }}>
+                    <Pressable
+                        onPress={RenderCalendar}
+                        style={{
+                            backgroundColor: "black",
+                            borderRadius: 20,
+                            padding: 20,
+                        }}
+                    >
+                        <Text style={{ fontSize: 20, color: "white" }}>
+                            {" "}
+                            View Calendar
+                        </Text>
+                    </Pressable>
+                    <View style={{ paddingTop: 30 }}>
+                        <Pressable
+                            onPress={() =>
+                                navigation.navigate("WorkoutHistory")
+                            }
+                            style={{
+                                backgroundColor: "black",
+                                borderRadius: 20,
+                                padding: 20,
+                                alignItems: "center",
+                            }}
+                        >
+                            <Text style={{ color: "white", fontSize: 20 }}>
+                                Workout History
+                            </Text>
+                        </Pressable>
+                    </View>
+                    <View style={{ paddingTop: 180, paddingHorizontal: 45 }}>
+                        <Pressable
+                            onPress={onPress}
+                            style={{
+                                backgroundColor: "black",
+                                borderRadius: 20,
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                alignItems: "center",
+                            }}
+                        >
+                            <Text style={{ color: "white", fontSize: 15 }}>
+                                Log Out
+                            </Text>
+                        </Pressable>
+                    </View>
+                </View>
             </View>
         </SafeAreaView>
     );
