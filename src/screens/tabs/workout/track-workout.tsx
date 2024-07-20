@@ -2,9 +2,11 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
 import { getOneWorkout } from "src/libs/database/functions";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 import { Entypo } from "@expo/vector-icons";
 import { Checkbox } from "react-native-paper";
+import { supabase } from "src/libs/database/supabase";
+import { useAuth } from "src/libs/auth/auth_provider";
 
 type FormattedExercise = {
     name: string;
@@ -37,21 +39,18 @@ function RenderItem({
                     flexDirection: "row",
                     justifyContent: "space-around",
                     gap: 60,
-                    borderWidth: 2,
                     padding: 10,
-                    borderColor: "grey",
-                    borderRadius: 10,
-                    paddingRight: 30
+                    paddingRight: 30,
                 }}
             >
-                    <Text style={{ fontSize: 24, fontWeight: 500 }}>Sets</Text>
-                    <Text style={{ fontSize: 24, fontWeight: 500 }}>Reps</Text>
-                    <Entypo
-                        name="check"
-                        size={24}
-                        color="black"
-                        style={{ marginLeft: 5 }}
-                    />
+                <Text style={{ fontSize: 24, fontWeight: 500 }}>Sets</Text>
+                <Text style={{ fontSize: 24, fontWeight: 500 }}>Reps</Text>
+                <Entypo
+                    name="check"
+                    size={24}
+                    color="black"
+                    style={{ marginLeft: 5 }}
+                />
             </View>
             {item.sets.map((set, setIndex) => (
                 <View
@@ -60,10 +59,7 @@ function RenderItem({
                         flexDirection: "row",
                         justifyContent: "space-around",
                         gap: 60,
-                        borderWidth: 2,
                         padding: 10,
-                        borderColor: "grey",
-                        borderRadius: 10,
                         alignItems: "center",
                     }}
                 >
@@ -93,9 +89,11 @@ function RenderItem({
 
 export default function TrackWorkout({ route }: any) {
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
     const [workouts, setWorkouts] = useState<FormattedExercise[]>([]);
     const { workoutId } = route.params;
+    const { session } = useAuth();
+
     useEffect(() => {
         let ignore = false;
         getOneWorkout(workoutId).then((result) => {
@@ -124,7 +122,11 @@ export default function TrackWorkout({ route }: any) {
                 }
             }
         });
+        return () => {
+            ignore = true;
+        };
     }, [workoutId]);
+
     const isFinished = useMemo(
         () =>
             workouts.every((exercise) =>
@@ -142,9 +144,11 @@ export default function TrackWorkout({ route }: any) {
         setWorkouts(updated);
     }
 
-    function handleWorkoutSubmit() {
-        navigation.navigate("workouthome");
+    async function handleWorkoutSubmit() {
+        await supabase.from("track_workout").insert({ workout_id: workoutId });
+        navigation.navigate("FinishWorkout");
     }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ padding: 20 }}>
