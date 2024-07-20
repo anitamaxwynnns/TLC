@@ -7,12 +7,12 @@ import {
     Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export default function AddWorkout() {
     const navigation =
-        useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<StackNavigationProp<WorkoutStackNavigatorParamsList>>();
 
     const handleManualWorkout = () => {
         navigation.navigate("manualworkout");
