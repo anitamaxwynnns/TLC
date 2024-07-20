@@ -19,7 +19,7 @@ export default function FinishWorkout() {
             </View>
             <View style={{ alignItems: "center", gap: 30 }}>
                 <Text style={{ fontSize: 20 }}>
-                    Congrats on finishing your workout!
+                    Congratulations on finishing your workout!
                 </Text>
                 <Pressable
                     onPress={() => navigation.navigate("workouthome")}
