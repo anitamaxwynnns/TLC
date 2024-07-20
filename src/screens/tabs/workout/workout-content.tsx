@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
 import { getOneWorkout } from "src/libs/database/functions";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 import { supabase } from "src/libs/database/supabase";
 
 export default function WorkoutContent() {
@@ -15,7 +15,7 @@ export default function WorkoutContent() {
     const { workoutId } = route.params as any;
     const [workout, setWorkout] = useState<any>(undefined);
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
 
     useEffect(() => {
         let ignore = false;
