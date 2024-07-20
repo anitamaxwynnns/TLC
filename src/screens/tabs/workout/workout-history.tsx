@@ -2,6 +2,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackNavigatorParamsList } from "App";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
+import { useAuth } from "src/libs/auth/auth_provider";
 import { supabase } from "src/libs/database/supabase";
 
 function renderItem({
@@ -40,12 +41,14 @@ export default function WorkoutHistory() {
     const [history, setHistory] = useState<any[] | null>([]);
     const navigation =
         useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+    const { session } = useAuth();
     useEffect(() => {
         let ignore = false;
         supabase
             .from("track_workout")
             .select("created_at, workout (name)")
             .order("created_at", { ascending: false })
+            .eq('user_id', session?.user.id)
             .then((result) => {
                 if (!ignore) {
                     if (result.data !== undefined) {
@@ -67,7 +70,15 @@ export default function WorkoutHistory() {
                     <Text style={{ fontSize: 15 }}>Back</Text>
                 </Pressable>
                 <View>
-                    <Text style={{ fontSize: 30, paddingLeft: 20, fontWeight: 600 }}>Completed Workouts</Text>
+                    <Text
+                        style={{
+                            fontSize: 30,
+                            paddingLeft: 20,
+                            fontWeight: 600,
+                        }}
+                    >
+                        Completed Workouts
+                    </Text>
                 </View>
                 <FlatList
                     data={history}
