@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { NavigationProp, useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 import { useState } from "react";
 import { supabase } from "src/libs/database/supabase";
 
@@ -18,7 +18,7 @@ export default function ExerciseSubmission() {
     const route = useRoute();
     const { selectedExercises } = route.params;
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
     const [reps, setReps] = useState("");
     const [sets, setSets] = useState("");
     const [name, setName] = useState("");
@@ -48,7 +48,7 @@ export default function ExerciseSubmission() {
         );
     };
 
-    const renderExercise = ({ item, index }: { item: any; index: number }) => (
+    const renderExercise = ({ item }: { item: any }) => (
         <View style={styles.exerciseItem}>
             <View style={{ gap: 2 }}>
                 <Text style={styles.exerciseText}>{item.name}</Text>

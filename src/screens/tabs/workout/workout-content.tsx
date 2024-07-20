@@ -1,4 +1,4 @@
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import {
     NavigationProp,
     useNavigation,
@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, SafeAreaView, Text, View } from "react-native";
 import { getOneWorkout } from "src/libs/database/functions";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 import { supabase } from "src/libs/database/supabase";
 
 export default function WorkoutContent() {
@@ -15,9 +15,9 @@ export default function WorkoutContent() {
     const { workoutId } = route.params as any;
     const [workout, setWorkout] = useState<any>(undefined);
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
 
-   useEffect(() => {
+    useEffect(() => {
         let ignore = false;
         getOneWorkout(workoutId).then((result) => {
             if (!ignore) {
@@ -125,6 +125,11 @@ export default function WorkoutContent() {
                         backgroundColor: "black",
                         width: "100%",
                     }}
+                    onPress={() =>
+                        navigation.navigate("TrackWorkout", {
+                            workoutId: workoutId,
+                        })
+                    }
                 >
                     <Text
                         style={{

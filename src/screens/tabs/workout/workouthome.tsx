@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { FlatList, SafeAreaView, View, Text, Pressable } from "react-native";
 import { useAuth } from "src/libs/auth/auth_provider";
 import { getManyWorkouts } from "src/libs/database/functions";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 
 function RenderWorkout({ item }: { item: any }) {
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
     return (
         <Pressable
             onPress={() =>
@@ -35,7 +35,7 @@ export default function WorkoutHome({ route }: any) {
     const { session } = useAuth();
     const [workouts, setWorkouts] = useState<{ name: string }[]>([]);
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
     useEffect(() => {
         let ignore = false;
         getManyWorkouts(session?.user.id ?? "").then((result) => {

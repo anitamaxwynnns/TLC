@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     SafeAreaView,
 } from "react-native";
-import { RootStackNavigatorParamsList } from "./workout";
+import { WorkoutStackNavigatorParamsList } from "./workout";
 import { supabase } from "src/libs/database/supabase";
 
 const renderExercise = ({ item }) => (
@@ -34,7 +34,7 @@ export default function AiWorkoutSubmission() {
     const { workout: workoutParam } = route.params;
     const workout = JSON.parse(workoutParam);
     const navigation =
-        useNavigation<NavigationProp<RootStackNavigatorParamsList>>();
+        useNavigation<NavigationProp<WorkoutStackNavigatorParamsList>>();
 
     const GoHome = async () => {
         const newWorkout = await supabase
