@@ -116,7 +116,7 @@ export default function Profile() {
                             </Text>
                         </Pressable>
                     </View>
-                    <View style={{ paddingTop: 180, paddingHorizontal: 45 }}>
+                    <View style={{ paddingTop: 50, paddingHorizontal: 45 }}>
                         <Pressable
                             onPress={onPress}
                             style={{
@@ -127,7 +127,7 @@ export default function Profile() {
                                 alignItems: "center",
                             }}
                         >
-                            <Text style={{ color: "white", fontSize: 15 }}>
+                            <Text style={{color: "white", fontSize: 15 }}>
                                 Log Out
                             </Text>
                         </Pressable>
