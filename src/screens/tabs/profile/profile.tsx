@@ -127,7 +127,7 @@ export default function Profile() {
                                 alignItems: "center",
                             }}
                         >
-                            <Text style={{ color: "white", fontSize: 15 }}>
+                            <Text style={{color: "white", fontSize: 15 }}>
                                 Log Out
                             </Text>
                         </Pressable>
