@@ -12,6 +12,7 @@ import ImageSelector from "src/screens/tabs/forum/ImageSelector";
 import ExerciseSubmission from "src/screens/tabs/workout/exerciseSubmission";
 import WeekScheduler from "src/screens/tabs/calendar/scheduler";
 import WorkoutHistory from "src/screens/tabs/workout/workout-history";
+import { useNotifications } from "src/libs/notifications";
 
 export type RootStackNavigatorParamsList = {
     StartScreen: undefined;
@@ -32,6 +33,8 @@ export type RootStackNavigatorParamsList = {
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
 
 export default function App() {
+    useNotifications();
+
     return (
         <SafeAreaProvider>
             <AuthProvider>
