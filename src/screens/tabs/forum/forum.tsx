@@ -95,7 +95,7 @@ function RenderPost({
             .eq("user_id", post.author_id)
             .then((result) => {
                 if (!ignore) {
-                    if (result !== undefined && result.data !== null) {
+                    if (result.data !== undefined && result.data !== null) {
                         setAuthorName(result.data[0].name);
                     }
                 }
