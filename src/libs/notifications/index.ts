@@ -27,41 +27,24 @@ async function registerForPushNotificationsAsync() {
         });
     }
 
-    if (Device.isDevice) {
-        const { status: existingStatus } =
-            await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== "granted") {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== "granted") {
-            handleRegistrationError(
-                "Permission not granted to get push token for push notification!",
-            );
-            return;
-        }
-        const projectId =
-            Constants?.expoConfig?.extra?.eas?.projectId ??
-            Constants?.easConfig?.projectId;
-        if (!projectId) {
-            handleRegistrationError("Project ID not found");
-        }
-        try {
-            const pushTokenString = (
-                await Notifications.getExpoPushTokenAsync({
-                    projectId,
-                })
-            ).data;
-            console.log(pushTokenString);
-            return pushTokenString;
-        } catch (e: unknown) {
-            handleRegistrationError(`${e}`);
-        }
-    } else {
+    if (!Device.isDevice) {
         handleRegistrationError(
             "Must use physical device for push notifications",
         );
+    }
+
+    const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+        handleRegistrationError(
+            "Permission not granted to get push token for push notification!",
+        );
+        return;
     }
 }
 
@@ -83,4 +66,33 @@ export function useNotifications() {
                 );
         };
     }, []);
+}
+
+const DAY_TO_INT: Record<string, number> = {
+    Sunday: 1,
+    Monday: 2,
+    Tuesday: 3,
+    Wednesday: 4,
+    Thursday: 5,
+    Friday: 6,
+    Saturday: 7,
+} as const;
+
+export async function scheduleNotification(
+    content: { title: string; body: string },
+    day: string,
+    time: { hour: number; minute: number },
+) {
+    return await Notifications.scheduleNotificationAsync({
+        content: content,
+        trigger: {
+            ...time,
+            weekday: DAY_TO_INT[day],
+            repeats: true,
+        },
+    });
+}
+
+export async function deleteNotification(id: string) {
+    return Notifications.cancelScheduledNotificationAsync(id);
 }

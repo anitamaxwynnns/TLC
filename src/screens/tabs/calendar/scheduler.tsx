@@ -14,6 +14,10 @@ import { useAuth } from "src/libs/auth/auth_provider";
 import { supabase } from "src/libs/database/supabase";
 import { Dropdown } from "react-native-element-dropdown";
 import DatePicker from "@react-native-community/datetimepicker";
+import {
+    deleteNotification,
+    scheduleNotification,
+} from "src/libs/notifications";
 
 const daysOfWeek = [
     "Monday",
@@ -34,6 +38,15 @@ function RenderEvent({
     editable: boolean;
     handleRemove: any;
 }) {
+    console.log(event.time);
+    const time = new Date(`1971-01-01T${event.time}Z`).toLocaleTimeString(
+        undefined,
+        {
+            timeZone: "Asia/Singapore",
+            timeStyle: "short",
+        },
+    );
+    console.log(time);
     return (
         <View
             style={{
@@ -54,11 +67,7 @@ function RenderEvent({
                     }}
                 >
                     <Text style={{ fontSize: 12, fontStyle: "italic" }}>
-                        {new Date(
-                            `1971-01-01T${event.time}`,
-                        ).toLocaleTimeString(undefined, {
-                            timeStyle: "short",
-                        })}
+                        {time}
                     </Text>
                     <Pressable onPress={handleRemove}>
                         <Entypo
@@ -70,12 +79,7 @@ function RenderEvent({
                 </View>
             ) : (
                 <Text style={{ fontSize: 12, fontStyle: "italic" }}>
-                    {new Date(`1971-01-01T${event.time}`).toLocaleTimeString(
-                        undefined,
-                        {
-                            timeStyle: "short",
-                        },
-                    )}
+                    {time}
                 </Text>
             )}
         </View>
@@ -119,7 +123,13 @@ function RenderDay({
 
     function handleRemove(id: any) {
         return async () => {
-            await supabase.from("calendar").delete().eq("id", id);
+            const { data: event } = await supabase
+                .from("calendar")
+                .delete()
+                .eq("id", id)
+                .select()
+                .single();
+            await deleteNotification(event.notification_id);
             supabase
                 .from("calendar")
                 .select("id, day, workout (name), time")
@@ -135,10 +145,19 @@ function RenderDay({
     }
 
     async function handleSubmit() {
+        const workout = workouts.find(
+            (workout) => workout.id === workoutdropdown,
+        );
+        const notifId = await scheduleNotification(
+            { title: workout.name, body: "Scheduled notification to workout!" },
+            day,
+            { hour: time.getHours(), minute: time.getMinutes() },
+        );
         await supabase.from("calendar").insert({
             time: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}.${time.getMilliseconds()}`,
             workout_id: workoutdropdown,
             day: day,
+            notification_id: notifId,
         });
         supabase
             .from("calendar")
@@ -151,7 +170,6 @@ function RenderDay({
                     setEvents(result.data);
                 }
             });
-
         setModalVisible(false);
     }
 
@@ -258,6 +276,7 @@ function RenderDay({
                                 <DatePicker
                                     mode="time"
                                     display="inline"
+                                    timeZoneName="Asia/Singapore"
                                     value={time}
                                     onChange={(_, date) =>
                                         date && setTime(date)
