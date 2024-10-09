@@ -33,8 +33,6 @@ export type RootStackNavigatorParamsList = {
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
 
 export default function App() {
-    useNotifications();
-
     return (
         <SafeAreaProvider>
             <AuthProvider>
