@@ -10,7 +10,7 @@ import {
 import { WorkoutStackNavigatorParamsList } from "./workout";
 import { supabase } from "src/libs/database/supabase";
 
-const renderExercise = ({ item }) => (
+const renderExercise = ({ item }: {item: any}) => (
     <View
         style={{
             borderWidth: 2,
